@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280" width="800" height="280">
+  <defs>
+    <clipPath id="boardClip">
+      <rect x="0" y="0" width="800" height="280" rx="16"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#boardClip)">
+    
+      <!-- Ciel méditerranéen -->
+      <rect x="0" y="0" width="800" height="168" fill="#1a3a5c"/>
+      <rect x="0" y="84" width="800" height="84" fill="#0d2035" opacity="0.5"/>
+      <!-- Étoiles -->
+      <circle cx="20" cy="8" r="1.5" fill="white" opacity="0.3"/><circle cx="42" cy="49" r="1.5" fill="white" opacity="0.44999999999999996"/><circle cx="64" cy="45" r="1.5" fill="white" opacity="0.6"/><circle cx="86" cy="41" r="1.5" fill="white" opacity="0.75"/><circle cx="108" cy="37" r="1.5" fill="white" opacity="0.3"/><circle cx="130" cy="33" r="1.5" fill="white" opacity="0.44999999999999996"/><circle cx="152" cy="29" r="1.5" fill="white" opacity="0.6"/><circle cx="174" cy="25" r="1.5" fill="white" opacity="0.75"/><circle cx="196" cy="21" r="1.5" fill="white" opacity="0.3"/><circle cx="218" cy="17" r="1.5" fill="white" opacity="0.44999999999999996"/><circle cx="240" cy="13" r="1.5" fill="white" opacity="0.6"/><circle cx="262" cy="9" r="1.5" fill="white" opacity="0.75"/><circle cx="284" cy="50" r="1.5" fill="white" opacity="0.3"/><circle cx="306" cy="46" r="1.5" fill="white" opacity="0.44999999999999996"/><circle cx="328" cy="42" r="1.5" fill="white" opacity="0.6"/><circle cx="350" cy="38" r="1.5" fill="white" opacity="0.75"/><circle cx="372" cy="34" r="1.5" fill="white" opacity="0.3"/><circle cx="394" cy="30" r="1.5" fill="white" opacity="0.44999999999999996"/><circle cx="416" cy="26" r="1.5" fill="white" opacity="0.6"/><circle cx="438" cy="22" r="1.5" fill="white" opacity="0.75"/><circle cx="460" cy="18" r="1.5" fill="white" opacity="0.3"/><circle cx="482" cy="14" r="1.5" fill="white" opacity="0.44999999999999996"/><circle cx="504" cy="10" r="1.5" fill="white" opacity="0.6"/><circle cx="526" cy="51" r="1.5" fill="white" opacity="0.75"/><circle cx="548" cy="47" r="1.5" fill="white" opacity="0.3"/><circle cx="570" cy="43" r="1.5" fill="white" opacity="0.44999999999999996"/><circle cx="592" cy="39" r="1.5" fill="white" opacity="0.6"/><circle cx="614" cy="35" r="1.5" fill="white" opacity="0.75"/><circle cx="636" cy="31" r="1.5" fill="white" opacity="0.3"/><circle cx="658" cy="27" r="1.5" fill="white" opacity="0.44999999999999996"/>
+      <!-- Mer -->
+      <rect x="0" y="162.39999999999998" width="800" height="117.6" fill="#1a4a7a"/>
+      <rect x="0" y="173.6" width="800" height="106.4" fill="#1a5a8a"/>
+      <!-- Vagues -->
+      <path d="M0,182 Q30,176.4 60,182 Q90,187.60000000000002 120,182" fill="none" stroke="#4a8aaa" stroke-width="1.5" opacity="0.5"/><path d="M120,193.20000000000002 Q150,187.60000000000002 180,193.20000000000002 Q210,198.8 240,193.20000000000002" fill="none" stroke="#4a8aaa" stroke-width="1.5" opacity="0.5"/><path d="M240,182 Q270,176.4 300,182 Q330,187.60000000000002 360,182" fill="none" stroke="#4a8aaa" stroke-width="1.5" opacity="0.5"/><path d="M360,193.20000000000002 Q390,187.60000000000002 420,193.20000000000002 Q450,198.8 480,193.20000000000002" fill="none" stroke="#4a8aaa" stroke-width="1.5" opacity="0.5"/><path d="M480,182 Q510,176.4 540,182 Q570,187.60000000000002 600,182" fill="none" stroke="#4a8aaa" stroke-width="1.5" opacity="0.5"/><path d="M600,193.20000000000002 Q630,187.60000000000002 660,193.20000000000002 Q690,198.8 720,193.20000000000002" fill="none" stroke="#4a8aaa" stroke-width="1.5" opacity="0.5"/>
+      <!-- Falaise -->
+      <polygon points="0,162.39999999999998 150,126 280,140 400,128.8 680,154 680,280 0,280" fill="#5a4a35"/>
+      <polygon points="0,162.39999999999998 150,126 280,140 400,128.8 680,154 680,168 0,168" fill="#6a5a45"/>
+      <!-- Corps du Colosse -->
+      <rect x="295" y="42" width="90" height="98" rx="10" fill="#C8B070"/>
+      <!-- Jambes écartées enjambant le port -->
+      <rect x="270" y="126" width="45" height="50.4" rx="6" fill="#B8A060"/>
+      <rect x="365" y="126" width="45" height="50.4" rx="6" fill="#B8A060"/>
+      <!-- Tête -->
+      <circle cx="340" cy="33.6" r="28" fill="#D4B870"/>
+      <!-- Couronne solaire -->
+      <line x1="340" y1="33.6" x2="299.54915028125265" y2="4.210737385376344" stroke="#FFD700" stroke-width="3" opacity="0.9"/><line x1="340" y1="33.6" x2="310.61073738537635" y2="-6.850849718747369" stroke="#FFD700" stroke-width="3" opacity="0.9"/><line x1="340" y1="33.6" x2="324.54915028125265" y2="-13.952825814757674" stroke="#FFD700" stroke-width="3" opacity="0.9"/><line x1="340" y1="33.6" x2="340" y2="-16.4" stroke="#FFD700" stroke-width="3" opacity="0.9"/><line x1="340" y1="33.6" x2="355.45084971874735" y2="-13.952825814757674" stroke="#FFD700" stroke-width="3" opacity="0.9"/><line x1="340" y1="33.6" x2="369.38926261462365" y2="-6.850849718747369" stroke="#FFD700" stroke-width="3" opacity="0.9"/><line x1="340" y1="33.6" x2="380.45084971874735" y2="4.210737385376344" stroke="#FFD700" stroke-width="3" opacity="0.9"/>
+      <!-- Torche bras levé -->
+      <rect x="388" y="33.6" width="8" height="56" rx="3" fill="#B8A060"/>
+      <ellipse cx="392" cy="28" rx="10" ry="14" fill="#FF6B20" opacity="0.9"/>
+      <ellipse cx="392" cy="22.400000000000002" rx="6" ry="10" fill="#FFD700" opacity="0.8"/>
+      <!-- Bateaux dans le port -->
+      <ellipse cx="160" cy="218.4" rx="55" ry="12" fill="#3a2a18"/>
+      <rect x="205" y="196" width="3" height="35" fill="#5C3A10"/>
+      <polygon points="208,196 208,224 240,210" fill="#E8D4A0" opacity="0.8"/>
+      <ellipse cx="520" cy="224" rx="45" ry="10" fill="#3a2a18"/>
+      <rect x="558" y="204.4" width="3" height="28" fill="#5C3A10"/>
+      <polygon points="561,204.4 561,226.8 588,215.6" fill="#E8D4A0" opacity="0.8"/>
+      <!-- Temple en arrière plan -->
+      <rect x="460" y="106.4" width="100" height="50" fill="#D4C8A0"/>
+      <rect x="465" y="89.60000000000001" width="8" height="55" fill="#C8BC94"/><rect x="483" y="89.60000000000001" width="8" height="55" fill="#C8BC94"/><rect x="501" y="89.60000000000001" width="8" height="55" fill="#C8BC94"/><rect x="519" y="89.60000000000001" width="8" height="55" fill="#C8BC94"/><rect x="537" y="89.60000000000001" width="8" height="55" fill="#C8BC94"/>
+      <polygon points="455,89.60000000000001 565,89.60000000000001 565,75.60000000000001 455,75.60000000000001" fill="#D4C8A0"/>
+    
+    <!-- Overlay dégradé bas -->
+    <rect x="0" y="190.4" width="800" height="89.60000000000001" fill="rgba(0,0,0,0.45)"/>
+    <!-- Bordure dorée -->
+    <rect x="0" y="0" width="800" height="280" rx="16" fill="none" stroke="#EF5350" stroke-width="3"/>
+    <rect x="4" y="4" width="792" height="272" rx="13" fill="none" stroke="#EF5350" stroke-width="0.8" opacity="0.4"/>
+    <!-- Bandeau nom -->
+    <rect x="0" y="0" width="220" height="44" rx="0" fill="rgba(0,0,0,0.65)"/>
+    <rect x="0" y="0" width="220" height="3" fill="#EF5350"/>
+    <text x="16" y="20" font-family="'Georgia',serif" font-size="18" font-weight="bold" fill="#EF5350">Rhodes</text>
+    <text x="16" y="36" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">Le Colosse · Grèce</text>
+    <!-- Ressource de départ -->
+    <rect x="710" y="8" width="78" height="30" rx="6" fill="rgba(0,0,0,0.65)" stroke="#EF5350" stroke-width="1"/>
+    <text x="722" y="28" font-family="Georgia,serif" font-size="11" fill="white">Départ : ⚙</text>
+    <!-- Étapes -->
+    
+      <rect x="30" y="215" width="230" height="52" rx="6" fill="rgba(0,0,0,0.55)" stroke="#EF5350" stroke-width="1.2"/>
+      <text x="42" y="231" font-family="Georgia,serif" font-size="8" fill="#EF5350" opacity="0.8">ÉT. 1</text>
+      <circle cx="50" cy="238" r="8" fill="#8B4513" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+       <text x="50" y="242" text-anchor="middle" font-family="Georgia" font-size="7" fill="white"></text><circle cx="68" cy="238" r="8" fill="#8B4513" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+       <text x="68" y="242" text-anchor="middle" font-family="Georgia" font-size="7" fill="white"></text>
+      <text x="42" y="256" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="white">+1 Bouclier</text>
+      <text x="42" y="270" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,0.6)">2 Bois</text>
+    
+      <rect x="282" y="215" width="230" height="52" rx="6" fill="rgba(0,0,0,0.55)" stroke="#EF5350" stroke-width="1.2"/>
+      <text x="294" y="231" font-family="Georgia,serif" font-size="8" fill="#EF5350" opacity="0.8">ÉT. 2</text>
+      <circle cx="302" cy="238" r="8" fill="#D2691E" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+       <text x="302" y="242" text-anchor="middle" font-family="Georgia" font-size="7" fill="white"></text><circle cx="320" cy="238" r="8" fill="#D2691E" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+       <text x="320" y="242" text-anchor="middle" font-family="Georgia" font-size="7" fill="white"></text><circle cx="338" cy="238" r="8" fill="#D2691E" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+       <text x="338" y="242" text-anchor="middle" font-family="Georgia" font-size="7" fill="white"></text>
+      <text x="294" y="256" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="white">+3 VP + 3 pièces</text>
+      <text x="294" y="270" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,0.6)">3 Argile</text>
+    
+      <rect x="534" y="215" width="230" height="52" rx="6" fill="rgba(0,0,0,0.55)" stroke="#EF5350" stroke-width="1.2"/>
+      <text x="546" y="231" font-family="Georgia,serif" font-size="8" fill="#EF5350" opacity="0.8">ÉT. 3</text>
+      <circle cx="554" cy="238" r="8" fill="#607D8B" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+       <text x="554" y="242" text-anchor="middle" font-family="Georgia" font-size="7" fill="white"></text><circle cx="572" cy="238" r="8" fill="#607D8B" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+       <text x="572" y="242" text-anchor="middle" font-family="Georgia" font-size="7" fill="white"></text><circle cx="590" cy="238" r="8" fill="#607D8B" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+       <text x="590" y="242" text-anchor="middle" font-family="Georgia" font-size="7" fill="white"></text><circle cx="608" cy="238" r="8" fill="#607D8B" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+       <text x="608" y="242" text-anchor="middle" font-family="Georgia" font-size="7" fill="white"></text>
+      <text x="546" y="256" font-family="Georgia,serif" font-size="10" font-weight="bold" fill="white">+1 Bouclier</text>
+      <text x="546" y="270" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,0.6)">4 Minerai</text>
+    
+  </g>
+</svg>

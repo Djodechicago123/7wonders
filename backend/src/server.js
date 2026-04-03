@@ -80,13 +80,12 @@ app.get('/api/cards', (req, res) => {
 });
 
 app.post('/api/lobby/create', (req, res) => {
-  const { username, token } = req.body;
-  if (!username) return res.status(400).json({ error: 'Username requis' });
+  const { wonderId, wonderName, username, token } = req.body;
+  if (!wonderId) return res.status(400).json({ error: 'Merveille requise' });
 
   const code = generateCode();
   const userId = uuidv4();
-
-  // Vérifier le token auth si fourni
+  const displayName = username || wonderName;
   const authPayload = token ? verifyToken(token) : null;
   const dbUserId = authPayload?.userId || null;
 
@@ -94,32 +93,38 @@ app.post('/api/lobby/create', (req, res) => {
     code,
     hostId: userId,
     status: 'waiting',
-    players: [{ userId, username, ready: false, dbUserId }],
+    players: [{ userId, username: displayName, wonderId, ready: false, dbUserId }],
     game: null,
     createdAt: Date.now(),
   };
 
-  console.log(`Lobby créé: ${code} par ${username}`);
-  res.json({ code, userId, username });
+  console.log(`Lobby créé: ${code} par ${displayName} (${wonderId})`);
+  res.json({ code, userId, username: displayName });
 });
 
 app.post('/api/lobby/join', (req, res) => {
-  const { code, username, token } = req.body;
-  if (!code || !username) return res.status(400).json({ error: 'Code et username requis' });
+  const { code, wonderId, wonderName, username, token } = req.body;
+  if (!code || !wonderId) return res.status(400).json({ error: 'Code et merveille requis' });
 
   const lobby = lobbies[code.toUpperCase()];
   if (!lobby) return res.status(404).json({ error: 'Lobby introuvable' });
   if (lobby.status !== 'waiting') return res.status(400).json({ error: 'Partie déjà commencée' });
   if (lobby.players.length >= 6) return res.status(400).json({ error: 'Lobby plein (max 6 joueurs)' });
 
+  // Vérifier que la merveille n'est pas déjà prise
+  if (lobby.players.some(p => p.wonderId === wonderId)) {
+    return res.status(400).json({ error: 'Cette merveille est déjà prise par un autre joueur' });
+  }
+
   const userId = uuidv4();
+  const displayName = username || wonderName;
   const authPayload = token ? verifyToken(token) : null;
   const dbUserId = authPayload?.userId || null;
 
-  lobby.players.push({ userId, username, ready: false, dbUserId });
+  lobby.players.push({ userId, username: displayName, wonderId, ready: false, dbUserId });
 
-  console.log(`${username} rejoint ${code}`);
-  res.json({ code, userId, username });
+  console.log(`${displayName} (${wonderId}) rejoint ${code}`);
+  res.json({ code, userId, username: displayName });
 });
 
 app.get('/api/lobby/:code', (req, res) => {

@@ -49,8 +49,9 @@ function distributeHands(deck, playerCount) {
   return hands;
 }
 
-function createInitialPlayer(userId, username, wonderIndex, playerIndex) {
-  const wonder = WONDERS[wonderIndex % WONDERS.length];
+function createInitialPlayer(userId, username, wonderIndex, playerIndex, wonderId) {
+  const wonder = (wonderId && WONDERS.find(w => w.id === wonderId))
+    || WONDERS[wonderIndex % WONDERS.length];
   return {
     userId,
     username,
@@ -76,7 +77,7 @@ function createGame(gameId, players) {
   const wonderOrder = shuffle([...Array(WONDERS.length).keys()]);
 
   const gamePlayers = players.map((p, i) =>
-    createInitialPlayer(p.userId, p.username, wonderOrder[i], i)
+    createInitialPlayer(p.userId, p.username, wonderOrder[i], i, p.wonderId)
   );
 
   const deck1 = createDeck(1, playerCount);

@@ -115,13 +115,13 @@ export const useGameStore = create((set, get) => ({
     set({ socket });
   },
 
-  createLobby: async (username) => {
+  createLobby: async (wonderId, wonderName, username) => {
     try {
       const token = localStorage.getItem('7wonders_token');
       const res = await fetch(`${BACKEND_URL}/api/lobby/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, token }),
+        body: JSON.stringify({ wonderId, wonderName, username, token }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
@@ -142,13 +142,13 @@ export const useGameStore = create((set, get) => ({
     }
   },
 
-  joinLobby: async (code, username) => {
+  joinLobby: async (code, wonderId, wonderName, username) => {
     try {
       const token = localStorage.getItem('7wonders_token');
       const res = await fetch(`${BACKEND_URL}/api/lobby/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, username, token }),
+        body: JSON.stringify({ code, wonderId, wonderName, username, token }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);

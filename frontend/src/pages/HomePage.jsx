@@ -1,39 +1,47 @@
-// HomePage.jsx - Écran d'accueil
+// HomePage.jsx - Écran d'accueil avec sélecteur de merveille
 import { useState } from 'react';
 import { useGameStore } from '../lib/store';
 import { useAuthStore } from '../lib/auth';
 
-const WONDERS_BG = [
-  { name: 'Gizeh', icon: '🔺', color: '#D4AC0D' },
-  { name: 'Rhodes', icon: '🗿', color: '#C62828' },
-  { name: 'Alexandrie', icon: '📚', color: '#1565C0' },
-  { name: 'Babylone', icon: '⭐', color: '#7B241C' },
-  { name: 'Olympie', icon: '🔥', color: '#2E7D32' },
-  { name: 'Ephèse', icon: '🏛️', color: '#6A1B9A' },
-  { name: 'Halicarnasse', icon: '🏺', color: '#E65100' },
+import gizehBoard      from '../assets/cards/wonder-board-gizeh.svg';
+import rhodesBoard     from '../assets/cards/wonder-board-rhodes.svg';
+import alexandrieBoard from '../assets/cards/wonder-board-alexandrie.svg';
+import babyloneBoard   from '../assets/cards/wonder-board-babylone.svg';
+import olympieBoard    from '../assets/cards/wonder-board-olympie.svg';
+import halicarnasseBoard from '../assets/cards/wonder-board-halicarnasse.svg';
+import epheseBoard     from '../assets/cards/wonder-board-ephese.svg';
+
+const WONDERS_LIST = [
+  { id: 'w-gizeh',        name: 'Gizeh',        subtitle: 'Les Pyramides',        region: 'Égypte',       resource: '🪨', icon: '🔺', color: '#D4AC0D', board: gizehBoard },
+  { id: 'w-rhodes',       name: 'Rhodes',        subtitle: 'Le Colosse',           region: 'Grèce',        resource: '⚙️', icon: '🗿', color: '#EF5350', board: rhodesBoard },
+  { id: 'w-alexandrie',   name: 'Alexandrie',    subtitle: 'Le Phare',             region: 'Égypte',       resource: '🔮', icon: '💡', color: '#42A5F5', board: alexandrieBoard },
+  { id: 'w-babylone',     name: 'Babylone',      subtitle: 'Les Jardins Suspendus',region: 'Mésopotamie', resource: '🧱', icon: '🌿', color: '#FF7043', board: babyloneBoard },
+  { id: 'w-olympie',      name: 'Olympie',       subtitle: 'La Statue de Zeus',    region: 'Grèce',        resource: '🪵', icon: '🔥', color: '#66BB6A', board: olympieBoard },
+  { id: 'w-halicarnasse', name: 'Halicarnasse',  subtitle: 'Le Mausolée',          region: 'Anatolie',     resource: '🧵', icon: '🏺', color: '#CE93D8', board: halicarnasseBoard },
+  { id: 'w-ephese',       name: 'Éphèse',        subtitle: "Le Temple d'Artémis",  region: 'Ionie',        resource: '📜', icon: '🏛️', color: '#FFA726', board: epheseBoard },
 ];
 
 export default function HomePage({ onProfile, onLeaderboard }) {
-  const [tab, setTab] = useState('create'); // 'create' | 'join'
-  const { user, logout } = useAuthStore();
-  const [username, setUsername] = useState(user?.username || '');
+  const [tab, setTab] = useState('create');
+  const [selectedWonder, setSelectedWonder] = useState(null);
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const { createLobby, joinLobby, error, clearError } = useGameStore();
+  const { user, logout } = useAuthStore();
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    if (!username.trim()) return;
+    if (!selectedWonder) return;
     setLoading(true);
-    await createLobby(username.trim());
+    await createLobby(selectedWonder.id, selectedWonder.name, user?.username || selectedWonder.name);
     setLoading(false);
   };
 
   const handleJoin = async (e) => {
     e.preventDefault();
-    if (!username.trim() || !code.trim()) return;
+    if (!selectedWonder || !code.trim()) return;
     setLoading(true);
-    await joinLobby(code.trim().toUpperCase(), username.trim());
+    await joinLobby(code.trim().toUpperCase(), selectedWonder.id, selectedWonder.name, user?.username || selectedWonder.name);
     setLoading(false);
   };
 
@@ -41,30 +49,22 @@ export default function HomePage({ onProfile, onLeaderboard }) {
     <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
       style={{ background: 'radial-gradient(ellipse at center, #2c1810 0%, #1a1208 60%, #0d0905 100%)' }}>
 
-      {/* Étoiles de fond */}
+      {/* Fond étoilé */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(80)].map((_, i) => (
-          <div key={i} className="absolute rounded-full bg-gold-300 opacity-30"
+        {[...Array(60)].map((_, i) => (
+          <div key={i} className="absolute rounded-full bg-gold-300 opacity-20"
             style={{
-              width: Math.random() * 3 + 1 + 'px',
-              height: Math.random() * 3 + 1 + 'px',
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%',
+              width: Math.random() * 2 + 1 + 'px', height: Math.random() * 2 + 1 + 'px',
+              left: Math.random() * 100 + '%', top: Math.random() * 100 + '%',
               animation: `glow-pulse ${2 + Math.random() * 3}s infinite`,
               animationDelay: Math.random() * 3 + 's',
             }} />
         ))}
       </div>
 
-      {/* Merveilles décoratifs en fond */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
-        <div className="text-[40rem] font-display">🔺</div>
-      </div>
+      <div className="relative z-10 w-full max-w-xl px-4 animate-float-in">
 
-      {/* Contenu principal */}
-      <div className="relative z-10 w-full max-w-md px-4 animate-float-in">
-
-        {/* Barre utilisateur connecté */}
+        {/* Barre utilisateur */}
         {user && (
           <div className="flex items-center justify-between mb-4 panel p-3 rounded-xl">
             <div className="flex items-center gap-2">
@@ -86,36 +86,20 @@ export default function HomePage({ onProfile, onLeaderboard }) {
         )}
 
         {/* Titre */}
-        <div className="text-center mb-10">
-          <div className="flex justify-center gap-3 mb-4 text-3xl">
-            {WONDERS_BG.map(w => (
-              <span key={w.name} title={w.name} className="animate-glow" style={{ textShadow: `0 0 10px ${w.color}` }}>
-                {w.icon}
-              </span>
-            ))}
-          </div>
-          <h1 className="text-shimmer font-display text-5xl font-black mb-2 tracking-wider">
-            7 WONDERS
-          </h1>
-          <p className="text-ancient-sand font-body text-sm tracking-[0.3em] uppercase opacity-70">
-            Construis ta civilisation
-          </p>
-          <div className="gold-divider mt-4" />
+        <div className="text-center mb-6">
+          <h1 className="text-shimmer font-display text-5xl font-black mb-1 tracking-wider">7 WONDERS</h1>
+          <p className="text-ancient-sand font-body text-sm tracking-[0.3em] uppercase opacity-70">Construis ta civilisation</p>
+          <div className="gold-divider mt-3" />
         </div>
 
         {/* Formulaire */}
-        <div className="panel-gold p-6">
-          {/* Tabs */}
-          <div className="flex mb-6 bg-black/30 rounded-lg p-1 gap-1">
-            {[
-              { id: 'create', label: '⚔️ Créer une partie' },
-              { id: 'join', label: '🤝 Rejoindre' },
-            ].map(t => (
+        <div className="panel-gold p-5">
+          {/* Onglets */}
+          <div className="flex mb-5 bg-black/30 rounded-lg p-1 gap-1">
+            {[{ id: 'create', label: '⚔️ Créer une partie' }, { id: 'join', label: '🤝 Rejoindre' }].map(t => (
               <button key={t.id} onClick={() => setTab(t.id)}
                 className={`flex-1 py-2 px-3 rounded-md text-xs font-body font-semibold transition-all ${
-                  tab === t.id
-                    ? 'bg-gradient-to-r from-gold-600 to-gold-700 text-ancient-dark shadow-lg'
-                    : 'text-ancient-sand hover:text-gold-400'
+                  tab === t.id ? 'bg-gradient-to-r from-gold-600 to-gold-700 text-ancient-dark shadow-lg' : 'text-ancient-sand hover:text-gold-400'
                 }`}>
                 {t.label}
               </button>
@@ -131,73 +115,97 @@ export default function HomePage({ onProfile, onLeaderboard }) {
           )}
 
           <form onSubmit={tab === 'create' ? handleCreate : handleJoin} className="space-y-4">
-            <div>
-              <label className="block text-xs font-body text-ancient-sand mb-1 uppercase tracking-widest">
-                Ton nom de civilisation
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                placeholder="Ex: Pharaon, Alexandre..."
-                maxLength={20}
-                className="w-full px-4 py-3 bg-black/40 border border-gold-700/40 rounded-lg text-parchment font-body text-sm
-                  placeholder-ancient-stone focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/30
-                  transition-colors"
-                style={{ color: '#f5e6c8' }}
-              />
-            </div>
 
+            {/* Code de partie (join uniquement) */}
             {tab === 'join' && (
               <div>
                 <label className="block text-xs font-body text-ancient-sand mb-1 uppercase tracking-widest">
                   Code de la partie
                 </label>
-                <input
-                  type="text"
-                  value={code}
-                  onChange={e => setCode(e.target.value.toUpperCase())}
-                  placeholder="Ex: AB12CD"
-                  maxLength={6}
+                <input type="text" value={code} onChange={e => setCode(e.target.value.toUpperCase())}
+                  placeholder="Ex: AB12CD" maxLength={6} required
                   className="w-full px-4 py-3 bg-black/40 border border-gold-700/40 rounded-lg text-gold-300 font-display
-                    text-xl text-center tracking-[0.5em] placeholder-ancient-stone
-                    focus:outline-none focus:border-gold-500 transition-colors"
-                />
+                    text-xl text-center tracking-[0.5em] placeholder-ancient-stone focus:outline-none focus:border-gold-500 transition-colors" />
               </div>
             )}
 
-            <button type="submit" disabled={loading || !username.trim() || (tab === 'join' && !code.trim())}
+            {/* Sélecteur de merveille */}
+            <WonderPicker selected={selectedWonder} onSelect={setSelectedWonder} />
+
+            <button type="submit"
+              disabled={loading || !selectedWonder || (tab === 'join' && !code.trim())}
               className="btn-gold w-full py-3 rounded-lg font-display text-sm tracking-widest">
-              {loading ? '⌛ Connexion...' : tab === 'create' ? '🏛️ CRÉER LA PARTIE' : '⚔️ REJOINDRE'}
+              {loading ? '⌛ Connexion...' :
+                selectedWonder
+                  ? (tab === 'create' ? `🏛️ JOUER AVEC ${selectedWonder.name.toUpperCase()}` : `⚔️ REJOINDRE AVEC ${selectedWonder.name.toUpperCase()}`)
+                  : '← Choisis une merveille'}
             </button>
           </form>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-          <div className="gold-divider" />
-          <div className="text-center">
-            <p className="text-ancient-stone text-xs font-body">
-              3 à 6 joueurs • 3 âges • Système de draft
+function WonderPicker({ selected, onSelect }) {
+  return (
+    <div>
+      <p className="text-xs font-body text-ancient-sand mb-2 uppercase tracking-widest">
+        Choisis ta merveille
+      </p>
+      <div className="grid grid-cols-4 gap-2">
+        {WONDERS_LIST.map(w => {
+          const isSelected = selected?.id === w.id;
+          return (
+            <button key={w.id} type="button" onClick={() => onSelect(w)}
+              style={{
+                position: 'relative', borderRadius: 10, overflow: 'hidden', padding: 0,
+                border: `2px solid ${isSelected ? w.color : 'rgba(212,172,13,0.15)'}`,
+                transform: isSelected ? 'scale(1.06)' : 'scale(1)',
+                transition: 'all 0.18s ease',
+                boxShadow: isSelected ? `0 0 12px ${w.color}66` : 'none',
+                cursor: 'pointer',
+              }}>
+              <img src={w.board} alt={w.name}
+                onError={e => { e.target.style.display = 'none'; }}
+                style={{ width: '100%', height: 70, objectFit: 'cover', objectPosition: 'center 30%', display: 'block' }} />
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: isSelected
+                  ? `linear-gradient(to top, ${w.color}99 0%, rgba(0,0,0,0.2) 100%)`
+                  : 'linear-gradient(to top, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.2) 100%)',
+                display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+                padding: '4px 5px',
+              }}>
+                <p style={{ fontFamily: 'Cinzel, serif', fontSize: 9, fontWeight: 'bold', color: isSelected ? '#fff' : w.color, lineHeight: 1.2, textAlign: 'center' }}>
+                  {w.name}
+                </p>
+                <p style={{ fontFamily: 'sans-serif', fontSize: 8, color: 'rgba(200,169,110,0.8)', textAlign: 'center' }}>
+                  {w.resource}
+                </p>
+              </div>
+            </button>
+          );
+        })}
+        {/* Case vide pour aligner la grille 7→4+3 */}
+        <div />
+      </div>
+
+      {/* Détail de la merveille sélectionnée */}
+      {selected && (
+        <div className="mt-3 p-3 rounded-lg flex items-center gap-3"
+          style={{ background: selected.color + '15', border: `1px solid ${selected.color}44` }}>
+          <span className="text-3xl">{selected.icon}</span>
+          <div>
+            <p className="font-display font-bold text-sm" style={{ color: selected.color }}>
+              {selected.name} — {selected.subtitle}
+            </p>
+            <p className="font-body text-xs text-ancient-stone">
+              {selected.region} · Ressource de départ : {selected.resource}
             </p>
           </div>
         </div>
-
-        {/* Légende des types de cartes */}
-        <div className="mt-6 grid grid-cols-3 gap-2">
-          {[
-            { type: 'resource', label: 'Ressources', icon: '🪵', color: '#5D4037' },
-            { type: 'civil', label: 'Civil', icon: '⛩️', color: '#1565C0' },
-            { type: 'military', label: 'Militaire', icon: '⚔️', color: '#B71C1C' },
-            { type: 'science', label: 'Science', icon: '🔭', color: '#1B5E20' },
-            { type: 'commerce', label: 'Commerce', icon: '💰', color: '#E65100' },
-            { type: 'guild', label: 'Guildes', icon: '👑', color: '#4A148C' },
-          ].map(t => (
-            <div key={t.type} className="flex items-center gap-2 px-3 py-2 rounded-lg opacity-70 hover:opacity-100 transition-opacity"
-              style={{ background: t.color + '33', border: `1px solid ${t.color}66` }}>
-              <span className="text-base">{t.icon}</span>
-              <span className="text-xs font-body" style={{ color: '#f5e6c8' }}>{t.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

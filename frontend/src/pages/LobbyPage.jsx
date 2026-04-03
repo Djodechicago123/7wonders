@@ -2,19 +2,22 @@
 import { useGameStore } from '../lib/store';
 import { useAuthStore } from '../lib/auth';
 
-const boardSvgs = import.meta.glob('../assets/cards/wonder-board-*.svg', { as: 'url', eager: true });
-function getBoardUrl(boardFile) {
-  return boardSvgs[`../assets/cards/${boardFile}.svg`] || null;
-}
+import gizehBoard      from '../assets/cards/wonder-board-gizeh.svg';
+import rhodesBoard     from '../assets/cards/wonder-board-rhodes.svg';
+import alexandrieBoard from '../assets/cards/wonder-board-alexandrie.svg';
+import babyloneBoard   from '../assets/cards/wonder-board-babylone.svg';
+import olympieBoard    from '../assets/cards/wonder-board-olympie.svg';
+import halicarnasseBoard from '../assets/cards/wonder-board-halicarnasse.svg';
+import epheseBoard     from '../assets/cards/wonder-board-ephese.svg';
 
 const WONDERS_PREVIEW = [
-  { name: 'Gizeh', boardFile: 'wonder-board-gizeh', icon: '🔺', startResource: '🪨', accentColor: '#D4AC0D', subtitle: 'Les Pyramides' },
-  { name: 'Rhodes', boardFile: 'wonder-board-rhodes', icon: '🗿', startResource: '⚙️', accentColor: '#EF5350', subtitle: 'Le Colosse' },
-  { name: 'Alexandrie', boardFile: 'wonder-board-alexandrie', icon: '💡', startResource: '🔮', accentColor: '#42A5F5', subtitle: 'Le Phare' },
-  { name: 'Babylone', boardFile: 'wonder-board-babylone', icon: '🌿', startResource: '🧱', accentColor: '#FF7043', subtitle: 'Les Jardins Suspendus' },
-  { name: 'Olympie', boardFile: 'wonder-board-olympie', icon: '🔥', startResource: '🪵', accentColor: '#66BB6A', subtitle: 'La Statue de Zeus' },
-  { name: 'Halicarnasse', boardFile: 'wonder-board-halicarnasse', icon: '🏺', startResource: '🧵', accentColor: '#CE93D8', subtitle: 'Le Mausolée' },
-  { name: 'Éphèse', boardFile: 'wonder-board-ephese', icon: '🏛️', startResource: '📜', accentColor: '#FFA726', subtitle: "Le Temple d'Artémis" },
+  { name: 'Gizeh',        board: gizehBoard,       resource: '🪨', accentColor: '#D4AC0D' },
+  { name: 'Rhodes',       board: rhodesBoard,      resource: '⚙️', accentColor: '#EF5350' },
+  { name: 'Alexandrie',   board: alexandrieBoard,  resource: '🔮', accentColor: '#42A5F5' },
+  { name: 'Babylone',     board: babyloneBoard,    resource: '🧱', accentColor: '#FF7043' },
+  { name: 'Olympie',      board: olympieBoard,     resource: '🪵', accentColor: '#66BB6A' },
+  { name: 'Halicarnasse', board: halicarnasseBoard,resource: '🧵', accentColor: '#CE93D8' },
+  { name: 'Éphèse',       board: epheseBoard,      resource: '📜', accentColor: '#FFA726' },
 ];
 
 export default function LobbyPage({ onProfile, onLeaderboard }) {
@@ -140,16 +143,11 @@ export default function LobbyPage({ onProfile, onLeaderboard }) {
           <h3 className="text-gold-400 font-display text-xs tracking-widest mb-3">🏛️ LES 7 MERVEILLES</h3>
           <div className="grid grid-cols-4 gap-2">
             {WONDERS_PREVIEW.map(w => {
-              const url = getBoardUrl(w.boardFile);
               return (
                 <div key={w.name} style={{ position: 'relative', borderRadius: 8, overflow: 'hidden', border: `1px solid ${w.accentColor}44` }}>
-                  {url
-                    ? <img src={url} alt={w.name}
-                        style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center 30%', display: 'block' }} />
-                    : <div style={{ width: '100%', height: 80, background: '#1a0f08', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>
-                        {w.icon}
-                      </div>
-                  }
+                  <img src={w.board} alt={w.name}
+                    onError={e => { e.target.style.display = 'none'; }}
+                    style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center 30%', display: 'block' }} />
                   <div style={{
                     position: 'absolute', inset: 0,
                     background: 'linear-gradient(to top, rgba(0,0,0,0.88) 40%, rgba(0,0,0,0.1) 100%)',
