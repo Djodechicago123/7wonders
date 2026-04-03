@@ -46,8 +46,11 @@ async function register(username, email, password) {
       if (error.message.includes('username')) throw new Error('Ce pseudo est déjà pris');
       if (error.message.includes('email'))    throw new Error('Cet email est déjà utilisé');
     }
-    console.error('[auth] register:', error);
-    throw new Error('Erreur lors de l\'inscription');
+    console.error('[auth] register error:', error.code, error.message);
+    if (error.message?.includes('relation') || error.message?.includes('does not exist')) {
+      throw new Error('Tables Supabase manquantes — exécute auth-schema.sql dans Supabase');
+    }
+    throw new Error(`Erreur inscription: ${error.message}`);
   }
 
   const token = jwt.sign({ userId: data.id, username: data.username }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
