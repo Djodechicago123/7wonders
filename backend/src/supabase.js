@@ -1,10 +1,12 @@
 // supabase.js — Client Supabase + fonctions DB
 const { createClient } = require('@supabase/supabase-js');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+  supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+} else {
+  console.warn('[supabase] SUPABASE_URL ou SUPABASE_SERVICE_KEY manquant — stats désactivées');
+}
 
 // Points gagnés/perdus selon la place
 function calcRankingPoints(place, playerCount) {
@@ -16,7 +18,7 @@ function calcRankingPoints(place, playerCount) {
 }
 
 async function saveGameResult(gameId, userId, wonder, place, score, playerCount) {
-  if (!userId) return 0;
+  if (!userId || !supabase) return 0;
   const pointsGained = calcRankingPoints(place, playerCount);
 
   const { error } = await supabase.from('game_results').insert({
@@ -34,7 +36,7 @@ async function saveGameResult(gameId, userId, wonder, place, score, playerCount)
 }
 
 async function updateUserStats(userId, place, score, pointsGained) {
-  if (!userId) return;
+  if (!userId || !supabase) return;
 
   const { data: user, error } = await supabase
     .from('users')
@@ -54,6 +56,7 @@ async function updateUserStats(userId, place, score, pointsGained) {
 }
 
 async function getLeaderboard() {
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from('leaderboard')
     .select('*')
@@ -64,6 +67,7 @@ async function getLeaderboard() {
 }
 
 async function getUserHistory(userId) {
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from('game_results')
     .select('*')

@@ -3,6 +3,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { supabase } = require('./supabase');
 
+function requireSupabase() {
+  if (!supabase) throw new Error('Base de données non configurée (SUPABASE_URL manquant)');
+}
+
 const SALT_ROUNDS = 12;
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-in-prod';
 const JWT_EXPIRES = '30d';
@@ -13,6 +17,7 @@ const AVATAR_COLORS = [
 ];
 
 async function register(username, email, password) {
+  requireSupabase();
   if (!username || username.length < 3 || username.length > 20)
     throw new Error('Le pseudo doit faire entre 3 et 20 caractères');
   if (!/^[a-zA-Z0-9_]+$/.test(username))
@@ -50,6 +55,7 @@ async function register(username, email, password) {
 }
 
 async function login(email, password) {
+  requireSupabase();
   if (!email || !password) throw new Error('Email et mot de passe requis');
 
   const { data: user, error } = await supabase
