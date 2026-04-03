@@ -1,8 +1,10 @@
 // LobbyPage.jsx - Salle d'attente
 import { useGameStore } from '../lib/store';
+import { useAuthStore } from '../lib/auth';
 
-export default function LobbyPage() {
+export default function LobbyPage({ onProfile, onLeaderboard }) {
   const { lobbyPlayers, lobbyCode, isHost, startGame, username, returnToHome } = useGameStore();
+  const { user, logout } = useAuthStore();
 
   const canStart = lobbyPlayers.length >= 2 && isHost;
 
@@ -12,10 +14,30 @@ export default function LobbyPage() {
       <div className="w-full max-w-lg animate-float-in">
 
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-shimmer font-display text-4xl font-black mb-2">7 WONDERS</h1>
+        <div className="text-center mb-6">
+          <h1 className="text-shimmer font-display text-4xl font-black mb-1">7 WONDERS</h1>
           <p className="text-ancient-sand font-body text-xs tracking-widest uppercase">Salle d'attente</p>
         </div>
+
+        {/* Joueur connecté */}
+        {user && (
+          <div className="panel p-3 mb-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-display font-black flex-shrink-0"
+              style={{ background: user.avatar_color + '33', border: `2px solid ${user.avatar_color}`, color: user.avatar_color }}>
+              {user.username.slice(0, 2).toUpperCase()}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-body font-semibold text-sm text-gold-400 truncate">{user.username}</p>
+              <p className="font-body text-xs text-ancient-stone">⭐ {user.ranking_points} pts</p>
+            </div>
+            <button onClick={onProfile}
+              className="btn-ghost text-xs px-3 py-1.5 rounded-lg">👤 Profil</button>
+            <button onClick={onLeaderboard}
+              className="btn-ghost text-xs px-3 py-1.5 rounded-lg">🏆 Top</button>
+            <button onClick={logout}
+              className="btn-ghost text-xs px-3 py-1.5 rounded-lg text-red-400 border-red-800/40">↩</button>
+          </div>
+        )}
 
         {/* Code de la partie */}
         <div className="panel-gold p-6 mb-4 text-center">
@@ -65,7 +87,6 @@ export default function LobbyPage() {
               </div>
             ))}
 
-            {/* Slots vides */}
             {[...Array(Math.max(0, 6 - lobbyPlayers.length))].map((_, i) => (
               <div key={`empty-${i}`} className="flex items-center gap-3 p-3 rounded-lg border border-dashed border-ancient-stone/20">
                 <div className="w-8 h-8 rounded-full border border-ancient-stone/20 flex items-center justify-center text-ancient-stone">
@@ -102,7 +123,7 @@ export default function LobbyPage() {
         {/* Règles rapides */}
         <div className="mt-6 panel p-4">
           <h3 className="text-gold-400 font-display text-xs tracking-widest mb-3">📜 RÈGLES RAPIDES</h3>
-          <div className="grid grid-cols-2 gap-2 text-xs font-body text-ancient-sand space-y-0">
+          <div className="grid grid-cols-2 gap-2 text-xs font-body text-ancient-sand">
             <p>🎴 Chaque tour: choisir une carte</p>
             <p>🔄 Les mains tournent entre joueurs</p>
             <p>⚔️ Combats militaires à chaque âge</p>

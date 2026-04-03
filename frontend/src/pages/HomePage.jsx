@@ -1,6 +1,7 @@
 // HomePage.jsx - Écran d'accueil
 import { useState } from 'react';
 import { useGameStore } from '../lib/store';
+import { useAuthStore } from '../lib/auth';
 
 const WONDERS_BG = [
   { name: 'Gizeh', icon: '🔺', color: '#D4AC0D' },
@@ -12,9 +13,10 @@ const WONDERS_BG = [
   { name: 'Halicarnasse', icon: '🏺', color: '#E65100' },
 ];
 
-export default function HomePage() {
+export default function HomePage({ onProfile, onLeaderboard }) {
   const [tab, setTab] = useState('create'); // 'create' | 'join'
-  const [username, setUsername] = useState('');
+  const { user, logout } = useAuthStore();
+  const [username, setUsername] = useState(user?.username || '');
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const { createLobby, joinLobby, error, clearError } = useGameStore();
@@ -61,6 +63,28 @@ export default function HomePage() {
 
       {/* Contenu principal */}
       <div className="relative z-10 w-full max-w-md px-4 animate-float-in">
+
+        {/* Barre utilisateur connecté */}
+        {user && (
+          <div className="flex items-center justify-between mb-4 panel p-3 rounded-xl">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-display font-black"
+                style={{ background: user.avatar_color + '33', border: `2px solid ${user.avatar_color}`, color: user.avatar_color }}>
+                {user.username.slice(0, 2).toUpperCase()}
+              </div>
+              <div>
+                <p className="text-xs font-body font-semibold text-gold-400">{user.username}</p>
+                <p className="text-xs font-body text-ancient-stone">⭐ {user.ranking_points} pts</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <button onClick={onProfile} className="btn-ghost text-xs px-2 py-1 rounded-lg">👤</button>
+              <button onClick={onLeaderboard} className="btn-ghost text-xs px-2 py-1 rounded-lg">🏆</button>
+              <button onClick={logout} className="btn-ghost text-xs px-2 py-1 rounded-lg text-red-400 border-red-800/40">↩</button>
+            </div>
+          </div>
+        )}
+
         {/* Titre */}
         <div className="text-center mb-10">
           <div className="flex justify-center gap-3 mb-4 text-3xl">

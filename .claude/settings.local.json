@@ -6,7 +6,8 @@
       "Bash(railway --version)",
       "Bash(curl --version)",
       "Bash(git --version)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(python -m json.tool)"
     ]
   }
 }
