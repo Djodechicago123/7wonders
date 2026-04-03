@@ -1,5 +1,5 @@
 // WonderBoard.jsx - Plateau d'une merveille
-import { RESOURCE_ICONS } from './Card';
+import Card, { RESOURCE_ICONS, TYPE_CONFIG } from './Card';
 
 const WONDER_COLORS = {
   Rhodes: { bg: '#4a1010', accent: '#EF5350' },
@@ -143,21 +143,29 @@ export default function WonderBoard({ player, compact = false }) {
         </div>
       </div>
 
-      {/* Cartes construites par type */}
+      {/* Cartes construites — faces visibles */}
       {builtCards.length > 0 && (
         <div>
-          <p className="text-xs font-body text-ancient-sand uppercase tracking-widest mb-2 opacity-70">Constructions</p>
-          <div className="flex flex-wrap gap-1">
-            {Object.entries(cardsByType).map(([type, count]) => {
-              const typeColors = { resource: '#5D4037', civil: '#1565C0', military: '#B71C1C', science: '#1B5E20', commerce: '#E65100', guild: '#4A148C' };
-              return (
-                <span key={type} className="text-xs font-body px-2 py-0.5 rounded-full"
-                  style={{ background: typeColors[type] + '44', color: '#f5e6c8', border: `1px solid ${typeColors[type]}66` }}>
-                  {count} {type}
-                </span>
-              );
-            })}
-          </div>
+          <p className="text-xs font-body text-ancient-sand uppercase tracking-widest mb-2 opacity-70">
+            Constructions ({builtCards.length})
+          </p>
+          {['resource', 'commerce', 'military', 'civil', 'science', 'guild'].map(type => {
+            const group = builtCards.filter(c => c.type === type);
+            if (group.length === 0) return null;
+            const cfg = TYPE_CONFIG[type];
+            return (
+              <div key={type} className="mb-2">
+                <p className="text-xs font-body mb-1 opacity-60" style={{ color: cfg?.border || '#f5e6c8' }}>
+                  {cfg?.label || type} ×{group.length}
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {group.map((card, i) => (
+                    <Card key={card.uniqueId || card.id || i} card={card} size="small" interactive={false} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

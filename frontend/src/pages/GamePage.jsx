@@ -6,6 +6,55 @@ import ActionPanel from '../components/ActionPanel';
 import Chat from '../components/Chat';
 import { useState } from 'react';
 
+function HandFan({ cards }) {
+  const { selectedCard } = useGameStore();
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+
+  if (!cards || cards.length === 0) {
+    return (
+      <p className="text-ancient-stone font-body text-sm py-6 text-center w-full">
+        ⏳ En attente du prochain tour...
+      </p>
+    );
+  }
+
+  const count = cards.length;
+  const maxAngle = count > 1 ? Math.min(28, count * 3.5) : 0;
+  const spacing = Math.min(36, 220 / count);
+
+  return (
+    <div className="relative flex justify-center overflow-visible" style={{ height: 158 }}>
+      {cards.map((card, i) => {
+        const angle = count > 1 ? -maxAngle / 2 + (maxAngle / (count - 1)) * i : 0;
+        const isHovered = hoveredIdx === i;
+        const isSelected = selectedCard && (
+          selectedCard.uniqueId === card.uniqueId || selectedCard.id === card.id
+        );
+        const lift = isHovered || isSelected ? -28 : 0;
+
+        return (
+          <div
+            key={card.uniqueId || card.id || i}
+            onMouseEnter={() => setHoveredIdx(i)}
+            onMouseLeave={() => setHoveredIdx(null)}
+            style={{
+              position: 'absolute',
+              left: `calc(50% + ${(i - (count - 1) / 2) * spacing}px - 42px)`,
+              bottom: 4,
+              transformOrigin: 'bottom center',
+              transform: `rotate(${angle}deg) translateY(${lift}px)`,
+              transition: 'transform 0.15s ease',
+              zIndex: isHovered || isSelected ? 100 : i,
+            }}
+          >
+            <Card card={card} size="normal" interactive={true} />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 const AGE_NAMES = { 1: 'Âge I — L\'Antiquité', 2: 'Âge II — La Croissance', 3: 'Âge III — L\'Empire' };
 const AGE_ICONS = { 1: '🌅', 2: '🌄', 3: '🌇' };
 
@@ -122,9 +171,9 @@ export default function GamePage() {
             </div>
           )}
 
-          {/* ── MA MAIN ── */}
+          {/* ── MA MAIN (éventail) ── */}
           <div className="panel p-3 flex-shrink-0">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1">
               <p className="font-display text-gold-400 text-xs tracking-widest">
                 🎴 MA MAIN ({myPlayer.hand?.length || 0} cartes)
               </p>
@@ -132,18 +181,7 @@ export default function GamePage() {
                 {game.age === 2 ? '← Tourne à gauche' : '→ Tourne à droite'}
               </p>
             </div>
-            <div className="flex gap-2 overflow-x-auto custom-scroll pb-1">
-              {myPlayer.hand?.map((card, i) => (
-                <div key={card.uniqueId || card.id || i} className="flex-shrink-0">
-                  <Card card={card} size="normal" interactive={true} />
-                </div>
-              ))}
-              {(!myPlayer.hand || myPlayer.hand.length === 0) && (
-                <p className="text-ancient-stone font-body text-sm py-4 text-center w-full">
-                  ⏳ En attente du prochain tour...
-                </p>
-              )}
-            </div>
+            <HandFan cards={myPlayer.hand} />
           </div>
 
           {/* ── PANEL D'ACTION ── */}
