@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 170" width="120" height="170">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2c1810"/>
+      <stop offset="100%" stop-color="#0d0905"/>
+    </linearGradient>
+    <pattern id="grid" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+      <path d="M0 0 L12 0 L12 12 L0 12 Z" fill="none" stroke="rgba(212,172,13,0.08)" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="star" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M12 6 L13.5 10.5 L18 10.5 L14.5 13 L16 17.5 L12 15 L8 17.5 L9.5 13 L6 10.5 L10.5 10.5 Z"
+        fill="rgba(212,172,13,0.06)"/>
+    </pattern>
+  </defs>
+
+  <!-- Fond -->
+  <rect x="2" y="2" width="116" height="166" rx="10" fill="url(#bg)"/>
+  <rect x="2" y="2" width="116" height="166" rx="10" fill="url(#grid)"/>
+  <rect x="2" y="2" width="116" height="166" rx="10" fill="url(#star)"/>
+
+  <!-- Bordure dorée double -->
+  <rect x="1" y="1" width="118" height="168" rx="11" fill="none" stroke="#D4AC0D" stroke-width="2"/>
+  <rect x="5" y="5" width="110" height="160" rx="8" fill="none" stroke="#D4AC0D" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Ornements coins -->
+  <path d="M8 8 L18 8 L18 10 L10 10 L10 18 L8 18 Z" fill="#D4AC0D" opacity="0.7"/>
+  <path d="M112 8 L102 8 L102 10 L110 10 L110 18 L112 18 Z" fill="#D4AC0D" opacity="0.7"/>
+  <path d="M8 162 L18 162 L18 160 L10 160 L10 152 L8 152 Z" fill="#D4AC0D" opacity="0.7"/>
+  <path d="M112 162 L102 162 L102 160 L110 160 L110 152 L112 152 Z" fill="#D4AC0D" opacity="0.7"/>
+
+  <!-- Médaillon central -->
+  <circle cx="60" cy="85" r="38" fill="none" stroke="#D4AC0D" stroke-width="1" opacity="0.3"/>
+  <circle cx="60" cy="85" r="30" fill="none" stroke="#D4AC0D" stroke-width="0.5" opacity="0.4"/>
+  <circle cx="60" cy="85" r="20" fill="rgba(212,172,13,0.1)" stroke="#D4AC0D" stroke-width="1" opacity="0.5"/>
+
+  <!-- Logo / Texte central -->
+  <text x="60" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="22" fill="#D4AC0D" opacity="0.7">🏛</text>
+  <text x="60" y="94" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="bold" fill="#D4AC0D" letter-spacing="2" opacity="0.8">7 WONDERS</text>
+
+  <!-- Lignes décoratives -->
+  <line x1="15" y1="85" x2="32" y2="85" stroke="#D4AC0D" stroke-width="0.8" opacity="0.4"/>
+  <line x1="88" y1="85" x2="105" y2="85" stroke="#D4AC0D" stroke-width="0.8" opacity="0.4"/>
+  <path d="M22 45 Q60 30 98 45" fill="none" stroke="#D4AC0D" stroke-width="0.8" opacity="0.3"/>
+  <path d="M22 125 Q60 140 98 125" fill="none" stroke="#D4AC0D" stroke-width="0.8" opacity="0.3"/>
+</svg>

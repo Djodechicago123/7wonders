@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 170" width="120" height="170">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#4a1010"/>
+      <stop offset="100%" stop-color="#1a0505"/>
+    </linearGradient>
+    <linearGradient id="shimmer" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.1)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.0)"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="2" y="2" width="116" height="166" rx="10" fill="url(#bg)"/>
+  <rect x="2" y="2" width="116" height="166" rx="10" fill="url(#shimmer)"/>
+  <rect x="1" y="1" width="118" height="168" rx="11" fill="none" stroke="#EF5350" stroke-width="2.5"/>
+  <rect x="4" y="4" width="112" height="162" rx="8" fill="none" stroke="#EF5350" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- Icône grande -->
+  <text x="60" y="72" text-anchor="middle" font-size="44" font-family="serif">🗿</text>
+
+  <!-- Nom -->
+  <rect x="8" y="78" width="104" height="22" rx="4" fill="rgba(0,0,0,0.5)"/>
+  <text x="60" y="93" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="bold" fill="#EF5350" letter-spacing="1">RHODES</text>
+
+  <!-- Ressource de départ -->
+  <text x="60" y="110" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#FFD0D0" opacity="0.8">RESSOURCE DE DÉPART</text>
+  <text x="60" y="122" text-anchor="middle" font-family="Georgia,serif" font-size="10" fill="#FFD0D0" font-weight="bold">
+    ⚙ ×1
+  </text>
+
+  <!-- Étapes -->
+  <rect x="10" y="126" width="28" height="26" rx="4" fill="rgba(0,0,0,0.4)" stroke="#EF5350" stroke-width="0.8" opacity="0.7"/>
+    <text x="24" y="137" text-anchor="middle" font-size="5.5" fill="#EF5350" font-family="sans-serif" opacity="0.8">ÉT.1</text>
+    <text x="24" y="148" text-anchor="middle" font-size="7" fill="#FFD0D0" font-family="Georgia,serif">+1⚔</text>
+<rect x="45" y="126" width="28" height="26" rx="4" fill="rgba(0,0,0,0.4)" stroke="#EF5350" stroke-width="0.8" opacity="0.7"/>
+    <text x="59" y="137" text-anchor="middle" font-size="5.5" fill="#EF5350" font-family="sans-serif" opacity="0.8">ÉT.2</text>
+    <text x="59" y="148" text-anchor="middle" font-size="7" fill="#FFD0D0" font-family="Georgia,serif">+3★</text>
+<rect x="80" y="126" width="28" height="26" rx="4" fill="rgba(0,0,0,0.4)" stroke="#EF5350" stroke-width="0.8" opacity="0.7"/>
+    <text x="94" y="137" text-anchor="middle" font-size="5.5" fill="#EF5350" font-family="sans-serif" opacity="0.8">ÉT.3</text>
+    <text x="94" y="148" text-anchor="middle" font-size="7" fill="#FFD0D0" font-family="Georgia,serif">+1⚔</text>
+
+  <!-- Badge MERVEILLE -->
+  <rect x="20" y="156" width="80" height="10" rx="4" fill="#EF5350" opacity="0.3"/>
+  <text x="60" y="164" text-anchor="middle" font-family="sans-serif" font-size="6" fill="#FFD0D0" letter-spacing="2" font-weight="bold">MERVEILLE</text>
+</svg>

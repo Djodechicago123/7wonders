@@ -1,0 +1,16 @@
+{
+  "name": "7wonders-online",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup":           "bash setup.sh",
+    "install:all":     "npm install --prefix backend && npm install --prefix frontend",
+    "dev:backend":     "npm run dev --prefix backend",
+    "dev:frontend":    "npm run dev --prefix frontend",
+    "generate:cards":  "node scripts/generate-card-svgs.js",
+    "test":            "node scripts/test-engine.js",
+    "build":           "node scripts/generate-card-svgs.js && npm run build --prefix frontend",
+    "deploy":          "bash deploy.sh",
+    "start":           "npm start --prefix backend"
+  }
+}

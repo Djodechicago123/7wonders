@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 170" width="120" height="170">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A0A4A"/>
+      <stop offset="100%" stop-color="#12042A"/>
+    </linearGradient>
+    <linearGradient id="banner" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3A0F6A"/>
+      <stop offset="100%" stop-color="#12042A"/>
+    </linearGradient>
+    <linearGradient id="shimmer" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="50%" stop-color="rgba(255,255,255,0.0)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.05)"/>
+    </linearGradient>
+    <clipPath id="cardClip">
+      <rect x="2" y="2" width="116" height="166" rx="10" ry="10"/>
+    </clipPath>
+    <pattern id="pat" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+        <path d="M11 0 L13 7 L22 7 L15 12 L18 19 L11 14 L4 19 L7 12 L0 7 L9 7 Z" fill="#1A0630" opacity="0.4"/>
+      </pattern>
+  </defs>
+
+  <!-- Fond principal -->
+  <rect x="2" y="2" width="116" height="166" rx="10" fill="url(#bg)" clip-path="url(#cardClip)"/>
+  <rect x="2" y="2" width="116" height="166" rx="10" fill="url(#pat)" clip-path="url(#cardClip)"/>
+  <rect x="2" y="2" width="116" height="166" rx="10" fill="url(#shimmer)" clip-path="url(#cardClip)"/>
+
+  <!-- Bordure extérieure double -->
+  <rect x="1" y="1" width="118" height="168" rx="11" fill="none" stroke="#8A30CC" stroke-width="2.5"/>
+  <rect x="4" y="4" width="112" height="162" rx="8" fill="none" stroke="#BB60FF" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Ornements coins -->
+  <circle cx="12" cy="12" r="5" fill="#A040E0" opacity="0.6"/>
+  <circle cx="108" cy="12" r="5" fill="#A040E0" opacity="0.6"/>
+  <circle cx="12" cy="158" r="5" fill="#A040E0" opacity="0.6"/>
+  <circle cx="108" cy="158" r="5" fill="#A040E0" opacity="0.6"/>
+  <path d="M7 12 L12 7 M108 7 L113 12 M7 158 L12 163 M113 158 L108 163" stroke="#BB60FF" stroke-width="1" opacity="0.6"/>
+
+  <!-- Zone icône -->
+  <rect x="30" y="18" width="60" height="58" rx="6" fill="rgba(0,0,0,0.35)"/>
+  <rect x="30" y="18" width="60" height="58" rx="6" fill="none" stroke="#8A30CC" stroke-width="1" opacity="0.6"/>
+  <g clip-path="url(#cardClip)" transform="translate(0, 5)">
+    <path d="M60 20 L65 35 L80 35 L68 45 L72 60 L60 52 L48 60 L52 45 L40 35 L55 35 Z" fill="#A040E0" stroke="#BB60FF" stroke-width="1.5"/>
+    <circle cx="60" cy="42" r="6" fill="#EAC8FF" opacity="0.8"/>
+  </g>
+
+  <!-- Bandeau nom -->
+  <rect x="6" y="80" width="108" height="20" rx="4" fill="url(#banner)"/>
+  <rect x="6" y="80" width="108" height="20" rx="4" fill="none" stroke="#8A30CC" stroke-width="0.8" opacity="0.5"/>
+  <text x="60" y="93" text-anchor="middle" font-family="Georgia,serif" font-size="8" font-weight="bold" fill="#EAC8FF" letter-spacing="0.5">GUILDE DES MA…</text>
+
+  <!-- Zone coût -->
+  <text x="60" y="82" text-anchor="middle" font-family="sans-serif" font-size="5.5" fill="#A040E0" opacity="0.8" letter-spacing="1">COÛT</text>
+  <circle cx="38" cy="87" r="5" fill="#8B4513" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+      <text x="38" y="90" text-anchor="middle" font-size="5.5" fill="white">🪵</text>
+<circle cx="49" cy="87" r="5" fill="#8B4513" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+      <text x="49" y="90" text-anchor="middle" font-size="5.5" fill="white">🪵</text>
+<circle cx="60" cy="87" r="5" fill="#8B4513" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+      <text x="60" y="90" text-anchor="middle" font-size="5.5" fill="white">🪵</text>
+<circle cx="71" cy="87" r="5" fill="#78909C" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+      <text x="71" y="90" text-anchor="middle" font-size="5.5" fill="white">🪨</text>
+<circle cx="82" cy="87" r="5" fill="#AB47BC" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
+      <text x="82" y="90" text-anchor="middle" font-size="5.5" fill="white">❋</text>
+
+  <!-- Séparateur -->
+  <line x1="15" y1="100" x2="105" y2="100" stroke="#8A30CC" stroke-width="0.8" opacity="0.6"/>
+
+  <!-- Zone effet -->
+  <rect x="8" y="102" width="104" height="50" rx="4" fill="rgba(0,0,0,0.25)"/>
+  
+
+  <!-- Badge type bas -->
+  <rect x="22" y="154" width="76" height="12" rx="5" fill="#3A0F6A"/>
+  <rect x="22" y="154" width="76" height="12" rx="5" fill="none" stroke="#8A30CC" stroke-width="0.8"/>
+  <text x="60" y="163" text-anchor="middle" font-family="sans-serif" font-size="6" font-weight="bold" fill="#EAC8FF" letter-spacing="1.5">GUILDE</text>
+
+  <!-- Âge indicator -->
+  <text x="60" y="148" text-anchor="middle" font-family="sans-serif" font-size="5.5" fill="#A040E0" opacity="0.7">ÂGE 3</text>
+</svg>
