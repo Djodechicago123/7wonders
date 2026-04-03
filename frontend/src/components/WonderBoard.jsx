@@ -105,18 +105,24 @@ export default function WonderBoard({ player, compact = false }) {
           {wonder?.stages.map((stage, i) => {
             const built = i < wonderStagesBuilt;
             return (
-              <div key={i} className="flex-1 rounded-lg p-2 transition-all"
+              <div key={i} className="flex-1 rounded-lg p-2 transition-all flex flex-col min-h-[90px]"
                 style={{
                   background: built ? wColors.accent + '22' : 'rgba(0,0,0,0.3)',
                   border: `1px solid ${built ? wColors.accent : 'rgba(255,255,255,0.1)'}`,
                 }}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-display font-bold" style={{ color: built ? wColors.accent : '#aaa' }}>
-                    {built ? '✅' : `${i + 1}`}
+                {/* Status */}
+                <div className="text-center mb-1">
+                  <span className="text-xs font-display font-bold" style={{ color: built ? wColors.accent : '#888' }}>
+                    {built ? '✅' : `Étape ${i + 1}`}
                   </span>
                 </div>
-                {/* Coût */}
-                <div className="flex flex-wrap gap-0.5 mb-1">
+                {/* Récompense — grande, centrée */}
+                <div className="flex-1 flex flex-col items-center justify-center gap-0.5">
+                  {stage.effect && renderStageEffect(stage.effect, true)}
+                </div>
+                {/* Coût — petit, en bas */}
+                <div className="flex flex-wrap gap-0.5 justify-center mt-1 pt-1"
+                  style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                   {Object.entries(stage.cost || {}).map(([res, amt]) => {
                     const r = RESOURCE_ICONS[res];
                     if (!r) return null;
@@ -130,10 +136,6 @@ export default function WonderBoard({ player, compact = false }) {
                   {(!stage.cost || Object.keys(stage.cost).length === 0) && (
                     <span className="text-xs text-green-400">🆓</span>
                   )}
-                </div>
-                {/* Effet */}
-                <div className="flex flex-wrap gap-0.5">
-                  {stage.effect && renderStageEffect(stage.effect)}
                 </div>
               </div>
             );
@@ -162,23 +164,36 @@ export default function WonderBoard({ player, compact = false }) {
   );
 }
 
-function renderStageEffect(effect) {
+function renderStageEffect(effect, big = false) {
+  const sz = big ? 'text-xl font-bold' : 'text-xs';
   const parts = [];
-  if (effect.vp) parts.push(<span key="vp" className="text-xs text-yellow-400">⭐{effect.vp}</span>);
-  if (effect.coins) parts.push(<span key="coins" className="text-xs text-yellow-300">🪙{effect.coins}</span>);
-  if (effect.shields) parts.push(<span key="shields" className="text-xs text-red-400">🛡{effect.shields}</span>);
-  if (effect.science) parts.push(<span key="science" className="text-xs text-green-400">{effect.science === 'compass' ? '🧭' : effect.science === 'tablet' ? '📋' : effect.science === 'gear' ? '⚙️' : '❓'}</span>);
+  if (effect.vp) parts.push(
+    <span key="vp" className={`${sz} text-yellow-400 flex items-center gap-0.5`}>⭐<span>{effect.vp}</span></span>
+  );
+  if (effect.coins) parts.push(
+    <span key="coins" className={`${sz} text-yellow-300 flex items-center gap-0.5`}>🪙<span>{effect.coins}</span></span>
+  );
+  if (effect.shields) parts.push(
+    <span key="shields" className={`${sz} text-red-400 flex items-center gap-0.5`}>🛡<span>{effect.shields}</span></span>
+  );
+  if (effect.science) parts.push(
+    <span key="science" className={`${sz} text-green-400`}>
+      {effect.science === 'compass' ? '🧭' : effect.science === 'tablet' ? '📋' : effect.science === 'gear' ? '⚙️' : '❓'}
+    </span>
+  );
   if (effect.resources) {
     Object.entries(effect.resources).forEach(([res, amt]) => {
-      if (res === 'any') parts.push(<span key="any" className="text-xs text-purple-300">🔀{amt}</span>);
+      if (res === 'any') parts.push(<span key="any" className={`${sz} text-purple-300`}>🔀</span>);
       else {
         const r = RESOURCE_ICONS[res];
-        if (r) parts.push(<span key={res} className="text-xs" style={{ color: r.color }}>{r.icon}{amt > 1 ? amt : ''}</span>);
+        if (r) parts.push(
+          <span key={res} className={sz} style={{ color: r.color }}>{r.icon}{amt > 1 ? amt : ''}</span>
+        );
       }
     });
   }
-  if (effect.freeBuild) parts.push(<span key="free" className="text-xs text-blue-300">🆓carte</span>);
-  if (effect.discardBuild) parts.push(<span key="discard" className="text-xs text-purple-300">♻️défausse</span>);
+  if (effect.freeBuild) parts.push(<span key="free" className={`${big ? 'text-base' : 'text-xs'} text-blue-300`}>🆓</span>);
+  if (effect.discardBuild) parts.push(<span key="discard" className={`${big ? 'text-base' : 'text-xs'} text-purple-300`}>♻️</span>);
   return parts;
 }
 

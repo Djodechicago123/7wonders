@@ -168,21 +168,39 @@ function applyCardEffect(player, card, game, players) {
 function processMove(game, userId, action, cardId) {
   const playerIndex = game.players.findIndex(p => p.userId === userId);
   if (playerIndex === -1) return { error: 'Joueur introuvable' };
-
-  // Empêcher de jouer deux fois au même tour
   if (game.pendingMoves[userId]) return { error: 'Tu as déjà joué ce tour' };
 
   const player = game.players[playerIndex];
   const card = player.hand.find(c => (c.uniqueId || c.id) === cardId);
   if (!card) return { error: 'Carte introuvable dans la main' };
 
-  const leftIndex = (playerIndex - 1 + game.players.length) % game.players.length;
-  const rightIndex = (playerIndex + 1) % game.players.length;
+  const leftNeighbor = game.players[(playerIndex - 1 + game.players.length) % game.players.length];
+  const rightNeighbor = game.players[(playerIndex + 1) % game.players.length];
 
+  // Valider et calculer le coût AVANT de modifier l'état
+  let tradingCost = 0;
+  if (action === 'play') {
+    const cost = card.cost || [];
+    if (cost.length > 0) {
+      const result = canAfford(player, cost, leftNeighbor, rightNeighbor, game);
+      if (!result.canAfford) return { error: `Ressources insuffisantes pour construire ${card.name}` };
+      tradingCost = result.coinCost;
+    }
+  } else if (action === 'wonder') {
+    if (player.wonderStagesBuilt >= player.wonder.stages.length) return { error: 'Merveille déjà complète' };
+    const stage = player.wonder.stages[player.wonderStagesBuilt];
+    const stageCost = stage.cost ? [stage.cost] : [];
+    if (stageCost.length > 0) {
+      const result = canAfford(player, stageCost, leftNeighbor, rightNeighbor, game);
+      if (!result.canAfford) return { error: `Ressources insuffisantes pour l'étape ${player.wonderStagesBuilt + 1}` };
+      tradingCost = result.coinCost;
+    }
+  }
+
+  // Appliquer les changements d'état
   game.pendingMoves[userId] = { action, cardId, playerIndex };
-
-  // Retirer la carte de la main
   player.hand = player.hand.filter(c => (c.uniqueId || c.id) !== cardId);
+  if (tradingCost > 0) player.coins -= tradingCost;
 
   if (action === 'play') {
     player.builtCards.push(card);
@@ -193,16 +211,13 @@ function processMove(game, userId, action, cardId) {
     game.discardPile.push(card);
     game.log.push(`${player.username} vend ${card.name} pour 3 pièces`);
   } else if (action === 'wonder') {
-    if (player.wonderStagesBuilt < player.wonder.stages.length) {
-      const stage = player.wonder.stages[player.wonderStagesBuilt];
-      player.wonderStagesBuilt++;
-      game.discardPile.push(card);
-      // Appliquer l'effet du stage
-      if (stage.effect) {
-        applyCardEffect(player, { effect: stage.effect }, game, game.players);
-      }
-      game.log.push(`${player.username} construit l'étape ${player.wonderStagesBuilt} de ${player.wonder.name}`);
+    const stage = player.wonder.stages[player.wonderStagesBuilt];
+    player.wonderStagesBuilt++;
+    game.discardPile.push(card);
+    if (stage.effect) {
+      applyCardEffect(player, { effect: stage.effect }, game, game.players);
     }
+    game.log.push(`${player.username} construit l'étape ${player.wonderStagesBuilt} de ${player.wonder.name}`);
   }
 
   return { success: true };
