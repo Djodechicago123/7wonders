@@ -2,6 +2,21 @@
 import { useGameStore } from '../lib/store';
 import { useAuthStore } from '../lib/auth';
 
+const boardSvgs = import.meta.glob('../assets/cards/wonder-board-*.svg', { as: 'url', eager: true });
+function getBoardUrl(boardFile) {
+  return boardSvgs[`../assets/cards/${boardFile}.svg`] || null;
+}
+
+const WONDERS_PREVIEW = [
+  { name: 'Gizeh', boardFile: 'wonder-board-gizeh', icon: '🔺', startResource: '🪨', accentColor: '#D4AC0D', subtitle: 'Les Pyramides' },
+  { name: 'Rhodes', boardFile: 'wonder-board-rhodes', icon: '🗿', startResource: '⚙️', accentColor: '#EF5350', subtitle: 'Le Colosse' },
+  { name: 'Alexandrie', boardFile: 'wonder-board-alexandrie', icon: '💡', startResource: '🔮', accentColor: '#42A5F5', subtitle: 'Le Phare' },
+  { name: 'Babylone', boardFile: 'wonder-board-babylone', icon: '🌿', startResource: '🧱', accentColor: '#FF7043', subtitle: 'Les Jardins Suspendus' },
+  { name: 'Olympie', boardFile: 'wonder-board-olympie', icon: '🔥', startResource: '🪵', accentColor: '#66BB6A', subtitle: 'La Statue de Zeus' },
+  { name: 'Halicarnasse', boardFile: 'wonder-board-halicarnasse', icon: '🏺', startResource: '🧵', accentColor: '#CE93D8', subtitle: 'Le Mausolée' },
+  { name: 'Éphèse', boardFile: 'wonder-board-ephese', icon: '🏛️', startResource: '📜', accentColor: '#FFA726', subtitle: "Le Temple d'Artémis" },
+];
+
 export default function LobbyPage({ onProfile, onLeaderboard }) {
   const { lobbyPlayers, lobbyCode, isHost, startGame, username, returnToHome } = useGameStore();
   const { user, logout } = useAuthStore();
@@ -120,8 +135,40 @@ export default function LobbyPage({ onProfile, onLeaderboard }) {
           </button>
         </div>
 
+        {/* Aperçu des merveilles */}
+        <div className="mt-4 panel p-4">
+          <h3 className="text-gold-400 font-display text-xs tracking-widest mb-3">🏛️ LES 7 MERVEILLES</h3>
+          <div className="grid grid-cols-4 gap-2">
+            {WONDERS_PREVIEW.map(w => {
+              const url = getBoardUrl(w.boardFile);
+              return (
+                <div key={w.name} style={{ position: 'relative', borderRadius: 8, overflow: 'hidden', border: `1px solid ${w.accentColor}44` }}>
+                  {url
+                    ? <img src={url} alt={w.name}
+                        style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center 30%', display: 'block' }} />
+                    : <div style={{ width: '100%', height: 80, background: '#1a0f08', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>
+                        {w.icon}
+                      </div>
+                  }
+                  <div style={{
+                    position: 'absolute', inset: 0,
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.88) 40%, rgba(0,0,0,0.1) 100%)',
+                    padding: '4px 6px',
+                    display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+                  }}>
+                    <p className="font-display font-bold text-xs leading-tight" style={{ color: w.accentColor }}>{w.name}</p>
+                    <p className="font-body text-xs opacity-60 text-ancient-sand leading-tight">{w.startResource} · 3 étapes</p>
+                  </div>
+                </div>
+              );
+            })}
+            {/* 8e case vide pour aligner la grille */}
+            <div />
+          </div>
+        </div>
+
         {/* Règles rapides */}
-        <div className="mt-6 panel p-4">
+        <div className="mt-4 panel p-4">
           <h3 className="text-gold-400 font-display text-xs tracking-widest mb-3">📜 RÈGLES RAPIDES</h3>
           <div className="grid grid-cols-2 gap-2 text-xs font-body text-ancient-sand">
             <p>🎴 Chaque tour: choisir une carte</p>
