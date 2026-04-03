@@ -86,7 +86,7 @@ export function EffectBadge({ effect }) {
 export default function Card({ card, size = 'normal', interactive = true, showBack = false }) {
   const { selectedCard, selectCard } = useGameStore();
   if (!card) return null;
-  const sizes = { small: { w:60, h:85 }, normal: { w:85, h:120 }, large: { w:120, h:170 } };
+  const sizes = { small: { w:60, h:85 }, normal: { w:85, h:120 }, medium: { w:105, h:148 }, large: { w:120, h:170 } };
   const { w, h } = sizes[size] || sizes.normal;
   const isSelected = selectedCard && (selectedCard.uniqueId === card.uniqueId || selectedCard.id === card.id);
 

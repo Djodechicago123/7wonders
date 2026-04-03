@@ -1,6 +1,6 @@
 // GamePage.jsx - Page principale de jeu
 import { useGameStore } from '../lib/store';
-import Card from '../components/Card';
+import Card, { RESOURCE_ICONS } from '../components/Card';
 import WonderBoard from '../components/WonderBoard';
 import ActionPanel from '../components/ActionPanel';
 import Chat from '../components/Chat';
@@ -19,18 +19,18 @@ function HandFan({ cards }) {
   }
 
   const count = cards.length;
-  const maxAngle = count > 1 ? Math.min(28, count * 3.5) : 0;
-  const spacing = Math.min(36, 220 / count);
+  const maxAngle = count > 1 ? Math.min(26, count * 3.2) : 0;
+  const spacing = Math.min(42, 260 / count);
 
   return (
-    <div className="relative flex justify-center overflow-visible" style={{ height: 158 }}>
+    <div className="relative flex justify-center overflow-visible" style={{ height: 188 }}>
       {cards.map((card, i) => {
         const angle = count > 1 ? -maxAngle / 2 + (maxAngle / (count - 1)) * i : 0;
         const isHovered = hoveredIdx === i;
         const isSelected = selectedCard && (
           selectedCard.uniqueId === card.uniqueId || selectedCard.id === card.id
         );
-        const lift = isHovered || isSelected ? -28 : 0;
+        const lift = isHovered || isSelected ? -32 : 0;
 
         return (
           <div
@@ -39,7 +39,7 @@ function HandFan({ cards }) {
             onMouseLeave={() => setHoveredIdx(null)}
             style={{
               position: 'absolute',
-              left: `calc(50% + ${(i - (count - 1) / 2) * spacing}px - 42px)`,
+              left: `calc(50% + ${(i - (count - 1) / 2) * spacing}px - 52px)`,
               bottom: 4,
               transformOrigin: 'bottom center',
               transform: `rotate(${angle}deg) translateY(${lift}px)`,
@@ -47,10 +47,62 @@ function HandFan({ cards }) {
               zIndex: isHovered || isSelected ? 100 : i,
             }}
           >
-            <Card card={card} size="normal" interactive={true} />
+            <Card card={card} size="medium" interactive={true} />
           </div>
         );
       })}
+    </div>
+  );
+}
+
+const RES_ORDER = ['wood', 'clay', 'ore', 'stone', 'papyrus', 'glass', 'textile'];
+
+function ResourceBar({ player }) {
+  if (!player) return null;
+  const { coins, resources, shields, science } = player;
+
+  return (
+    <div className="panel px-3 py-2 flex items-center gap-3 flex-shrink-0 flex-wrap">
+      {/* Pièces */}
+      <div className="flex items-center gap-1.5">
+        <span className="text-base">🪙</span>
+        <span className="font-display font-black text-yellow-300 text-lg leading-none">{coins}</span>
+      </div>
+
+      <div className="w-px self-stretch bg-gold-800/30" />
+
+      {/* Ressources */}
+      <div className="flex items-center gap-3">
+        {RES_ORDER.map(res => {
+          const r = RESOURCE_ICONS[res];
+          const amt = resources?.[res] || 0;
+          return (
+            <div key={res} className="flex flex-col items-center gap-0"
+              style={{ opacity: amt > 0 ? 1 : 0.28 }}>
+              <span className="text-sm leading-none">{r.icon}</span>
+              <span className="font-display font-bold text-xs leading-none mt-0.5"
+                style={{ color: amt > 0 ? r.color : '#888' }}>
+                {amt}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Boucliers + Science si non-zéro */}
+      {(shields > 0 || science.compass > 0 || science.tablet > 0 || science.gear > 0) && (
+        <>
+          <div className="w-px self-stretch bg-gold-800/30" />
+          <div className="flex items-center gap-2 text-xs font-display font-bold">
+            {shields > 0 && (
+              <span className="flex items-center gap-0.5 text-red-400">⚔️ {shields}</span>
+            )}
+            {science.compass > 0 && <span className="text-green-400">🧭×{science.compass}</span>}
+            {science.tablet > 0 && <span className="text-green-400">📋×{science.tablet}</span>}
+            {science.gear > 0 && <span className="text-green-400">⚙️×{science.gear}</span>}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -170,6 +222,9 @@ export default function GamePage() {
               </div>
             </div>
           )}
+
+          {/* ── COMPTEUR DE RESSOURCES ── */}
+          <ResourceBar player={myPlayer} />
 
           {/* ── MA MAIN (éventail) ── */}
           <div className="panel p-3 flex-shrink-0">
