@@ -51,7 +51,7 @@ export default function WonderBoard({ player, compact = false }) {
         {boardUrl ? (
           <img src={boardUrl} alt={wonder?.name}
             onError={e => { e.target.style.display = 'none'; }}
-            style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center bottom', display: 'block' }} />
+            style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
         ) : (
           <div style={{ width: '100%', height: 80, background: '#1a0f08', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32 }}>
             {wonder?.icon || '🏛️'}
@@ -94,7 +94,7 @@ export default function WonderBoard({ player, compact = false }) {
         {boardUrl ? (
           <img src={boardUrl} alt={wonder?.name}
             onError={e => { e.target.style.display = 'none'; }}
-            style={{ width: '100%', height: 200, objectFit: 'cover', objectPosition: 'center bottom', display: 'block' }} />
+            style={{ width: '100%', height: 200, objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
         ) : (
           <div style={{ width: '100%', height: 200, background: '#1a0f08', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80 }}>
             {wonder?.icon || '🏛️'}

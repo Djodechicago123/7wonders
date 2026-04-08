@@ -1,6 +1,8 @@
 // LobbyPage.jsx - Salle d'attente
+import { useState } from 'react';
 import { useGameStore } from '../lib/store';
 import { useAuthStore } from '../lib/auth';
+import GuideModal from '../components/GuideModal';
 
 import gizehBoard      from '../assets/cards/wonder-board-gizeh.svg';
 import rhodesBoard     from '../assets/cards/wonder-board-rhodes.svg';
@@ -23,12 +25,14 @@ const WONDERS_PREVIEW = [
 export default function LobbyPage({ onProfile, onLeaderboard }) {
   const { lobbyPlayers, lobbyCode, isHost, startGame, username, returnToHome } = useGameStore();
   const { user, logout } = useAuthStore();
+  const [showGuide, setShowGuide] = useState(false);
 
   const canStart = lobbyPlayers.length >= 2 && isHost;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4"
       style={{ background: 'radial-gradient(ellipse at top, #2c1810 0%, #1a1208 100%)' }}>
+      {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
       <div className="w-full max-w-lg animate-float-in">
 
         {/* Header */}
@@ -132,6 +136,11 @@ export default function LobbyPage({ onProfile, onLeaderboard }) {
             </div>
           )}
 
+          <button onClick={() => setShowGuide(true)}
+            className="btn-ghost w-full py-3 rounded-lg text-sm font-body">
+            📖 Guide du joueur — règles & conseils
+          </button>
+
           <button onClick={returnToHome}
             className="btn-ghost w-full py-3 rounded-lg text-sm font-body">
             ← Quitter le lobby
@@ -147,7 +156,7 @@ export default function LobbyPage({ onProfile, onLeaderboard }) {
                 <div key={w.name} style={{ position: 'relative', borderRadius: 8, overflow: 'hidden', border: `1px solid ${w.accentColor}44` }}>
                   <img src={w.board} alt={w.name}
                     onError={e => { e.target.style.display = 'none'; }}
-                    style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center 30%', display: 'block' }} />
+                    style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
                   <div style={{
                     position: 'absolute', inset: 0,
                     background: 'linear-gradient(to top, rgba(0,0,0,0.88) 40%, rgba(0,0,0,0.1) 100%)',

@@ -4,11 +4,30 @@ import Card, { RESOURCE_ICONS } from '../components/Card';
 import WonderBoard from '../components/WonderBoard';
 import ActionPanel from '../components/ActionPanel';
 import Chat from '../components/Chat';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function HandFan({ cards }) {
-  const { selectedCard } = useGameStore();
+  const { selectedCard, selectCard } = useGameStore();
   const [hoveredIdx, setHoveredIdx] = useState(null);
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (!cards || cards.length === 0) return;
+      if (e.key === 'ArrowRight') {
+        const idx = selectedCard
+          ? cards.findIndex(c => (c.uniqueId || c.id) === (selectedCard.uniqueId || selectedCard.id))
+          : -1;
+        selectCard(cards[(idx + 1) % cards.length]);
+      } else if (e.key === 'ArrowLeft') {
+        const idx = selectedCard
+          ? cards.findIndex(c => (c.uniqueId || c.id) === (selectedCard.uniqueId || selectedCard.id))
+          : 0;
+        selectCard(cards[(idx - 1 + cards.length) % cards.length]);
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [cards, selectedCard, selectCard]);
 
   if (!cards || cards.length === 0) {
     return (
@@ -233,7 +252,7 @@ export default function GamePage() {
                 🎴 MA MAIN ({myPlayer.hand?.length || 0} cartes)
               </p>
               <p className="text-xs font-body text-ancient-stone">
-                {game.age === 2 ? '← Tourne à gauche' : '→ Tourne à droite'}
+                {game.age === 2 ? '← Tourne à gauche' : '→ Tourne à droite'} · <span className="opacity-60">← → pour naviguer</span>
               </p>
             </div>
             <HandFan cards={myPlayer.hand} />
