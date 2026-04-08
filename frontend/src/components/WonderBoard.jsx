@@ -11,6 +11,7 @@ import halicarnasseBoard from '../assets/cards/wonder-board-halicarnasse.svg';
 import epheseBoard     from '../assets/cards/wonder-board-ephese.svg';
 
 const BOARD_IMAGES = {
+  // Par ID
   'w-gizeh':        gizehBoard,
   'w-rhodes':       rhodesBoard,
   'w-alexandrie':   alexandrieBoard,
@@ -18,10 +19,23 @@ const BOARD_IMAGES = {
   'w-olympie':      olympieBoard,
   'w-halicarnasse': halicarnasseBoard,
   'w-ephese':       epheseBoard,
+  // Par nom (fallback)
+  'gizeh':          gizehBoard,
+  'rhodes':         rhodesBoard,
+  'alexandrie':     alexandrieBoard,
+  'babylone':       babyloneBoard,
+  'olympie':        olympieBoard,
+  'halicarnasse':   halicarnasseBoard,
+  'ephese':         epheseBoard,
+  'éphèse':         epheseBoard,
 };
 
 function getBoardUrl(wonder) {
-  return BOARD_IMAGES[wonder?.id] || null;
+  if (!wonder) return null;
+  return BOARD_IMAGES[wonder.id]
+      || BOARD_IMAGES[wonder.boardFile]
+      || BOARD_IMAGES[wonder.name?.toLowerCase()]
+      || null;
 }
 
 export default function WonderBoard({ player, compact = false }) {
@@ -37,7 +51,7 @@ export default function WonderBoard({ player, compact = false }) {
         {boardUrl ? (
           <img src={boardUrl} alt={wonder?.name}
             onError={e => { e.target.style.display = 'none'; }}
-            style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center 30%', display: 'block' }} />
+            style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center 70%', display: 'block' }} />
         ) : (
           <div style={{ width: '100%', height: 80, background: '#1a0f08', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32 }}>
             {wonder?.icon || '🏛️'}
@@ -80,7 +94,7 @@ export default function WonderBoard({ player, compact = false }) {
         {boardUrl ? (
           <img src={boardUrl} alt={wonder?.name}
             onError={e => { e.target.style.display = 'none'; }}
-            style={{ width: '100%', height: 200, objectFit: 'cover', objectPosition: 'center 30%', display: 'block' }} />
+            style={{ width: '100%', height: 200, objectFit: 'cover', objectPosition: 'center 70%', display: 'block' }} />
         ) : (
           <div style={{ width: '100%', height: 200, background: '#1a0f08', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80 }}>
             {wonder?.icon || '🏛️'}

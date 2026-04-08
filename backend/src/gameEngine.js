@@ -103,17 +103,21 @@ function createGame(gameId, players) {
 }
 
 function canAfford(player, cost, leftNeighbor, rightNeighbor, game) {
-  if (!cost || cost.length === 0) return { canAfford: true, coinCost: 0 };
+  if (!cost || (Array.isArray(cost) && cost.length === 0)) {
+    return { canAfford: true, coinCost: 0, missing: {} };
+  }
 
+  const costArr = Array.isArray(cost) ? cost : [cost];
   const needed = {};
-  (Array.isArray(cost) ? cost : [cost]).forEach(c => {
+  costArr.forEach(c => {
+    if (!c) return;
     Object.entries(c).forEach(([res, amt]) => {
-      if (res !== 'coin') needed[res] = (needed[res] || 0) + amt;
+      if (res !== 'coin') needed[res] = (needed[res] || 0) + (amt || 0);
     });
   });
 
   // Coins directs requis
-  const coinRequired = (Array.isArray(cost) ? cost : [cost]).reduce((sum, c) => sum + (c.coin || 0), 0);
+  const coinRequired = costArr.reduce((sum, c) => sum + (c?.coin || 0), 0);
 
   const available = { ...player.resources };
 
@@ -127,15 +131,15 @@ function canAfford(player, cost, leftNeighbor, rightNeighbor, game) {
 
   // Calculer le coût de commerce
   for (const [res, amt] of Object.entries(missing)) {
-    const leftCost = player.tradeLeft[res] || 2;
-    const rightCost = player.tradeRight[res] || 2;
+    const leftCost = (player.tradeLeft?.[res]) || 2;
+    const rightCost = (player.tradeRight?.[res]) || 2;
     const cheapest = Math.min(leftCost, rightCost);
     extraCost += cheapest * amt;
   }
 
   const totalCoinCost = coinRequired + extraCost;
   return {
-    canAfford: player.coins >= totalCoinCost,
+    canAfford: (player.coins || 0) >= totalCoinCost,
     coinCost: totalCoinCost,
     missing,
   };

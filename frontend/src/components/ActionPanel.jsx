@@ -2,21 +2,67 @@
 import { useGameStore } from '../lib/store';
 import Card, { CostBadge, EffectBadge } from './Card';
 
+function checkCanBuild(card, player) {
+  if (!card || !player) return { ok: false, cantAfford: false, needsTrade: false, totalCoinCost: 0, missing: {} };
+  const cost = card.cost;
+  if (!cost || cost.length === 0) return { ok: true, cantAfford: false, needsTrade: false, totalCoinCost: 0, missing: {} };
+
+  const needed = {};
+  (Array.isArray(cost) ? cost : [cost]).forEach(c => {
+    Object.entries(c).forEach(([res, amt]) => {
+      if (res !== 'coin') needed[res] = (needed[res] || 0) + amt;
+    });
+  });
+
+  const coinsNeeded = (Array.isArray(cost) ? cost : [cost])
+    .reduce((sum, c) => sum + (c.coin || 0), 0);
+
+  const missing = {};
+  let extraCost = 0;
+  Object.entries(needed).forEach(([res, amt]) => {
+    const have = player.resources?.[res] || 0;
+    if (have < amt) {
+      missing[res] = amt - have;
+      const tradeCost = Math.min(player.tradeLeft?.[res] || 2, player.tradeRight?.[res] || 2);
+      extraCost += tradeCost * (amt - have);
+    }
+  });
+
+  const totalCoinCost = coinsNeeded + extraCost;
+  const hasMissing = Object.keys(missing).length > 0;
+  const canAfford = (player.coins || 0) >= totalCoinCost;
+
+  return {
+    ok: !hasMissing || canAfford,
+    missing,
+    totalCoinCost,
+    needsTrade: hasMissing && canAfford,
+    cantAfford: hasMissing && !canAfford,
+  };
+}
+
 export default function ActionPanel() {
   const {
     selectedCard, selectedAction, selectAction, playCard,
-    hasPlayedThisTurn, waitingFor, myPlayer, game,
+    hasPlayedThisTurn, waitingFor, myPlayer,
   } = useGameStore();
 
-  const canPlay = selectedCard && selectedAction && !hasPlayedThisTurn;
+  const buildCheck = checkCanBuild(selectedCard, myPlayer);
+  const canPlay = selectedCard && selectedAction && !hasPlayedThisTurn
+    && (selectedAction !== 'play' || buildCheck.ok);
 
   const ACTIONS = [
     {
       id: 'play',
       icon: '🏗️',
       label: 'Construire',
-      desc: 'Jouer la carte dans ta cité',
+      desc: buildCheck.cantAfford
+        ? `Manque ${buildCheck.totalCoinCost - (myPlayer?.coins || 0)}🪙`
+        : buildCheck.needsTrade
+          ? `Commerce ${buildCheck.totalCoinCost}🪙`
+          : 'Jouer la carte dans ta cité',
       color: '#42A5F5',
+      disabled: buildCheck.cantAfford,
     },
     {
       id: 'sell',
@@ -73,28 +119,46 @@ export default function ActionPanel() {
 
           {/* Boutons d'action */}
           <div className="grid grid-cols-3 gap-2 mt-4">
-            {ACTIONS.map(action => (
-              <button
-                key={action.id}
-                disabled={action.disabled}
-                onClick={() => selectAction(action.id)}
-                className={`p-2 rounded-lg text-center transition-all border text-xs font-body font-semibold ${
-                  selectedAction === action.id
-                    ? 'scale-105'
-                    : 'opacity-70 hover:opacity-100'
-                }`}
-                style={{
-                  background: selectedAction === action.id ? action.color + '33' : 'rgba(0,0,0,0.3)',
-                  borderColor: selectedAction === action.id ? action.color : action.color + '44',
-                  color: action.disabled ? '#666' : selectedAction === action.id ? action.color : '#f5e6c8',
-                  cursor: action.disabled ? 'not-allowed' : 'pointer',
-                }}>
-                <div className="text-lg mb-1">{action.icon}</div>
-                <div className="font-bold text-xs">{action.label}</div>
-                <div className="text-xs opacity-70">{action.desc}</div>
-              </button>
-            ))}
+            {ACTIONS.map(action => {
+              const isSelected = selectedAction === action.id;
+              const isDisabled = !!action.disabled;
+              const descColor = action.id === 'play' && buildCheck.cantAfford
+                ? '#EF5350'
+                : action.id === 'play' && buildCheck.needsTrade
+                  ? '#FFA726'
+                  : undefined;
+              return (
+                <button
+                  key={action.id}
+                  disabled={isDisabled}
+                  onClick={() => selectAction(action.id)}
+                  className={`p-2 rounded-lg text-center transition-all border text-xs font-body font-semibold ${
+                    isSelected ? 'scale-105' : 'opacity-70 hover:opacity-100'
+                  }`}
+                  style={{
+                    background: isSelected ? action.color + '33' : 'rgba(0,0,0,0.3)',
+                    borderColor: isDisabled ? '#44444488'
+                      : isSelected ? action.color : action.color + '44',
+                    color: isDisabled ? '#666'
+                      : isSelected ? action.color : '#f5e6c8',
+                    cursor: isDisabled ? 'not-allowed' : 'pointer',
+                    opacity: isDisabled ? 0.5 : 1,
+                  }}>
+                  <div className="text-lg mb-1">{action.icon}</div>
+                  <div className="font-bold text-xs">{action.label}</div>
+                  <div className="text-xs opacity-80" style={{ color: descColor }}>{action.desc}</div>
+                </button>
+              );
+            })}
           </div>
+
+          {/* Message ressources insuffisantes */}
+          {selectedAction === 'play' && buildCheck.cantAfford && (
+            <div className="mt-3 px-4 py-2 rounded-lg text-center"
+              style={{ background: '#7B1D1D', border: '1px solid #EF5350' }}>
+              <p className="font-body text-red-200 text-sm">⚠️ Ressources pas disponibles</p>
+            </div>
+          )}
 
           {/* Confirmer */}
           <button
