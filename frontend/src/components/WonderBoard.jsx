@@ -51,7 +51,7 @@ export default function WonderBoard({ player, compact = false }) {
         {boardUrl ? (
           <img src={boardUrl} alt={wonder?.name}
             onError={e => { e.target.style.display = 'none'; }}
-            style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center 70%', display: 'block' }} />
+            style={{ width: '100%', height: 80, objectFit: 'cover', objectPosition: 'center bottom', display: 'block' }} />
         ) : (
           <div style={{ width: '100%', height: 80, background: '#1a0f08', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32 }}>
             {wonder?.icon || '🏛️'}
@@ -94,7 +94,7 @@ export default function WonderBoard({ player, compact = false }) {
         {boardUrl ? (
           <img src={boardUrl} alt={wonder?.name}
             onError={e => { e.target.style.display = 'none'; }}
-            style={{ width: '100%', height: 200, objectFit: 'cover', objectPosition: 'center 70%', display: 'block' }} />
+            style={{ width: '100%', height: 200, objectFit: 'cover', objectPosition: 'center bottom', display: 'block' }} />
         ) : (
           <div style={{ width: '100%', height: 200, background: '#1a0f08', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 80 }}>
             {wonder?.icon || '🏛️'}
@@ -104,7 +104,7 @@ export default function WonderBoard({ player, compact = false }) {
         {/* Gradient overlay */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.78) 100%)',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.55) 100%)',
           padding: '12px 14px',
           display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
         }}>

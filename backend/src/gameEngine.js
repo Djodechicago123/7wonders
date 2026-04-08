@@ -102,7 +102,7 @@ function createGame(gameId, players) {
   };
 }
 
-function canAfford(player, cost, leftNeighbor, rightNeighbor, game) {
+function canAfford(player, cost) {
   if (!cost || (Array.isArray(cost) && cost.length === 0)) {
     return { canAfford: true, coinCost: 0, missing: {} };
   }
@@ -116,31 +116,18 @@ function canAfford(player, cost, leftNeighbor, rightNeighbor, game) {
     });
   });
 
-  // Coins directs requis
   const coinRequired = costArr.reduce((sum, c) => sum + (c?.coin || 0), 0);
 
-  const available = { ...player.resources };
-
-  // Calculer ce qu'il manque
-  let extraCost = 0;
   const missing = {};
   Object.entries(needed).forEach(([res, amt]) => {
-    const have = available[res] || 0;
+    const have = player.resources?.[res] || 0;
     if (have < amt) missing[res] = amt - have;
   });
 
-  // Calculer le coût de commerce
-  for (const [res, amt] of Object.entries(missing)) {
-    const leftCost = (player.tradeLeft?.[res]) || 2;
-    const rightCost = (player.tradeRight?.[res]) || 2;
-    const cheapest = Math.min(leftCost, rightCost);
-    extraCost += cheapest * amt;
-  }
-
-  const totalCoinCost = coinRequired + extraCost;
+  const hasMissing = Object.keys(missing).length > 0;
   return {
-    canAfford: (player.coins || 0) >= totalCoinCost,
-    coinCost: totalCoinCost,
+    canAfford: !hasMissing && (player.coins || 0) >= coinRequired,
+    coinCost: hasMissing ? 0 : coinRequired,
     missing,
   };
 }
@@ -179,33 +166,29 @@ function processMove(game, userId, action, cardId) {
   const card = player.hand.find(c => (c.uniqueId || c.id) === cardId);
   if (!card) return { error: 'Carte introuvable dans la main' };
 
-  const leftNeighbor = game.players[(playerIndex - 1 + game.players.length) % game.players.length];
-  const rightNeighbor = game.players[(playerIndex + 1) % game.players.length];
-
   // Valider et calculer le coût AVANT de modifier l'état
-  let tradingCost = 0;
+  let coinCost = 0;
   if (action === 'play') {
-    const cost = card.cost || [];
-    if (cost.length > 0) {
-      const result = canAfford(player, cost, leftNeighbor, rightNeighbor, game);
-      if (!result.canAfford) return { error: `Ressources insuffisantes pour construire ${card.name}` };
-      tradingCost = result.coinCost;
+    const result = canAfford(player, card.cost || []);
+    if (!result.canAfford) {
+      const missingStr = Object.entries(result.missing).map(([r, n]) => `${n} ${r}`).join(', ');
+      return { error: `Ressources insuffisantes pour construire ${card.name}${missingStr ? ` (manque : ${missingStr})` : ''}` };
     }
+    coinCost = result.coinCost;
   } else if (action === 'wonder') {
     if (player.wonderStagesBuilt >= player.wonder.stages.length) return { error: 'Merveille déjà complète' };
     const stage = player.wonder.stages[player.wonderStagesBuilt];
-    const stageCost = stage.cost ? [stage.cost] : [];
-    if (stageCost.length > 0) {
-      const result = canAfford(player, stageCost, leftNeighbor, rightNeighbor, game);
-      if (!result.canAfford) return { error: `Ressources insuffisantes pour l'étape ${player.wonderStagesBuilt + 1}` };
-      tradingCost = result.coinCost;
+    const result = canAfford(player, stage.cost ? [stage.cost] : []);
+    if (!result.canAfford) {
+      return { error: `Ressources insuffisantes pour l'étape ${player.wonderStagesBuilt + 1}` };
     }
+    coinCost = result.coinCost;
   }
 
   // Appliquer les changements d'état
   game.pendingMoves[userId] = { action, cardId, playerIndex };
   player.hand = player.hand.filter(c => (c.uniqueId || c.id) !== cardId);
-  if (tradingCost > 0) player.coins -= tradingCost;
+  if (coinCost > 0) player.coins -= coinCost;
 
   if (action === 'play') {
     player.builtCards.push(card);

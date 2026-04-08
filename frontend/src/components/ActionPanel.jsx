@@ -3,41 +3,35 @@ import { useGameStore } from '../lib/store';
 import Card, { CostBadge, EffectBadge } from './Card';
 
 function checkCanBuild(card, player) {
-  if (!card || !player) return { ok: false, cantAfford: false, needsTrade: false, totalCoinCost: 0, missing: {} };
+  if (!card || !player) return { ok: false, missing: {}, coinsNeeded: 0, cantAfford: false, missingResources: false };
   const cost = card.cost;
-  if (!cost || cost.length === 0) return { ok: true, cantAfford: false, needsTrade: false, totalCoinCost: 0, missing: {} };
+  if (!cost || cost.length === 0) return { ok: true, missing: {}, coinsNeeded: 0, cantAfford: false, missingResources: false };
 
   const needed = {};
-  (Array.isArray(cost) ? cost : [cost]).forEach(c => {
+  const costArr = Array.isArray(cost) ? cost : [cost];
+  costArr.forEach(c => {
     Object.entries(c).forEach(([res, amt]) => {
       if (res !== 'coin') needed[res] = (needed[res] || 0) + amt;
     });
   });
 
-  const coinsNeeded = (Array.isArray(cost) ? cost : [cost])
-    .reduce((sum, c) => sum + (c.coin || 0), 0);
+  const coinsNeeded = costArr.reduce((sum, c) => sum + (c.coin || 0), 0);
 
   const missing = {};
-  let extraCost = 0;
   Object.entries(needed).forEach(([res, amt]) => {
     const have = player.resources?.[res] || 0;
-    if (have < amt) {
-      missing[res] = amt - have;
-      const tradeCost = Math.min(player.tradeLeft?.[res] || 2, player.tradeRight?.[res] || 2);
-      extraCost += tradeCost * (amt - have);
-    }
+    if (have < amt) missing[res] = amt - have;
   });
 
-  const totalCoinCost = coinsNeeded + extraCost;
   const hasMissing = Object.keys(missing).length > 0;
-  const canAfford = (player.coins || 0) >= totalCoinCost;
+  const cantAfford = !hasMissing && (player.coins || 0) < coinsNeeded;
 
   return {
-    ok: !hasMissing || canAfford,
+    ok: !hasMissing && !cantAfford,
     missing,
-    totalCoinCost,
-    needsTrade: hasMissing && canAfford,
-    cantAfford: hasMissing && !canAfford,
+    coinsNeeded,
+    cantAfford,
+    missingResources: hasMissing,
   };
 }
 
@@ -56,13 +50,13 @@ export default function ActionPanel() {
       id: 'play',
       icon: '🏗️',
       label: 'Construire',
-      desc: buildCheck.cantAfford
-        ? `Manque ${buildCheck.totalCoinCost - (myPlayer?.coins || 0)}🪙`
-        : buildCheck.needsTrade
-          ? `Commerce ${buildCheck.totalCoinCost}🪙`
+      desc: buildCheck.missingResources
+        ? 'Ressources insuffisantes'
+        : buildCheck.cantAfford
+          ? `Manque ${buildCheck.coinsNeeded - (myPlayer?.coins || 0)}🪙`
           : 'Jouer la carte dans ta cité',
       color: '#42A5F5',
-      disabled: buildCheck.cantAfford,
+      disabled: !buildCheck.ok,
     },
     {
       id: 'sell',
@@ -153,10 +147,14 @@ export default function ActionPanel() {
           </div>
 
           {/* Message ressources insuffisantes */}
-          {selectedAction === 'play' && buildCheck.cantAfford && (
+          {selectedAction === 'play' && !buildCheck.ok && (
             <div className="mt-3 px-4 py-2 rounded-lg text-center"
               style={{ background: '#7B1D1D', border: '1px solid #EF5350' }}>
-              <p className="font-body text-red-200 text-sm">⚠️ Ressources pas disponibles</p>
+              <p className="font-body text-red-200 text-sm">
+                {buildCheck.missingResources
+                  ? `⚠️ Ressources manquantes : ${Object.entries(buildCheck.missing).map(([r, n]) => `${n} ${r}`).join(', ')}`
+                  : `⚠️ Pas assez de pièces (besoin : ${buildCheck.coinsNeeded}🪙)`}
+              </p>
             </div>
           )}
 
